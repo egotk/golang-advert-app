@@ -1,20 +1,39 @@
 package corezaplogger
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path/filepath"
 	"time"
 
-	corelogger "github.com/egotk/golang-advert-app/internal/core/logger"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
 
+type loggerContextKey struct{}
+
+var (
+	key = loggerContextKey{}
+)
+
 type Logger struct {
-	zapLogger *zap.Logger
+	*zap.Logger
 
 	file *os.File
+}
+
+func ToContext(ctx context.Context, log *Logger) context.Context {
+	return context.WithValue(ctx, key, log)
+}
+
+func FromContext(ctx context.Context) *Logger {
+	log, ok := ctx.Value(key).(*Logger)
+	if !ok {
+		panic("no logger in context")
+	}
+
+	return log
 }
 
 func New(config Config) (*Logger, error) {
@@ -50,52 +69,15 @@ func New(config Config) (*Logger, error) {
 
 	zapLogger := zap.New(core, zap.AddCaller())
 	return &Logger{
-		zapLogger: zapLogger,
-		file:      logFile,
+		Logger: zapLogger,
+		file:   logFile,
 	}, nil
 }
 
-func (l *Logger) Debug(msg string, fields ...corelogger.Field) {
-	fieldsZap := fieldsToZap(fields...)
-	l.zapLogger.Debug(msg, fieldsZap...)
-}
-
-func (l *Logger) Info(msg string, fields ...corelogger.Field) {
-	fieldsZap := fieldsToZap(fields...)
-	l.zapLogger.Info(msg, fieldsZap...)
-}
-
-func (l *Logger) Warn(msg string, fields ...corelogger.Field) {
-	fieldsZap := fieldsToZap(fields...)
-	l.zapLogger.Warn(msg, fieldsZap...)
-}
-
-func (l *Logger) Error(msg string, fields ...corelogger.Field) {
-	fieldsZap := fieldsToZap(fields...)
-	l.zapLogger.Error(msg, fieldsZap...)
-}
-
-func (l *Logger) DPanic(msg string, fields ...corelogger.Field) {
-	fieldsZap := fieldsToZap(fields...)
-	l.zapLogger.DPanic(msg, fieldsZap...)
-}
-
-func (l *Logger) Panic(msg string, fields ...corelogger.Field) {
-	fieldsZap := fieldsToZap(fields...)
-	l.zapLogger.Panic(msg, fieldsZap...)
-}
-
-func (l *Logger) Fatal(msg string, fields ...corelogger.Field) {
-	fieldsZap := fieldsToZap(fields...)
-	l.zapLogger.Fatal(msg, fieldsZap...)
-}
-
-func (l *Logger) With(field ...corelogger.Field) corelogger.Logger {
-	fieldsZap := fieldsToZap(field...)
-
+func (l *Logger) With(field ...zap.Field) *Logger {
 	return &Logger{
-		zapLogger: l.zapLogger.With(fieldsZap...),
-		file:      l.file,
+		Logger: l.Logger.With(field...),
+		file:   l.file,
 	}
 }
 
@@ -103,14 +85,4 @@ func (l *Logger) Close() {
 	if err := l.file.Close(); err != nil {
 		fmt.Println("failed to close application logger:", err)
 	}
-}
-
-func fieldsToZap(fields ...corelogger.Field) []zap.Field {
-	fieldsZap := make([]zap.Field, len(fields))
-
-	for idx, field := range fields {
-		fieldsZap[idx] = zap.Any(field.Key, field.Value)
-	}
-
-	return fieldsZap
 }

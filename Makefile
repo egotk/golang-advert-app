@@ -51,3 +51,8 @@ migrate-action:
 		-path /migrations \
 		-database postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@advertapp-postgres:5432/${POSTGRES_DB}?sslmode=disable \
 		"$(action)"
+
+app-run:
+	@export LOGGER_FOLDER="${PROJECT_ROOT}/out/logs" && \
+	export POSTGRES_HOST=localhost && \
+	go run "${PROJECT_ROOT}/cmd/app/main.go"

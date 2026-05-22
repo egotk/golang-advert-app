@@ -3,8 +3,9 @@ package corehttp
 import (
 	"net/http"
 
-	corelogger "github.com/egotk/golang-advert-app/internal/core/logger"
+	corezaplogger "github.com/egotk/golang-advert-app/internal/core/logger/zap"
 	"github.com/google/uuid"
+	"go.uber.org/zap"
 )
 
 type Middleware func(http.Handler) http.Handler
@@ -42,17 +43,17 @@ func RequestID() Middleware {
 	}
 }
 
-func Logger(log corelogger.Logger) Middleware {
+func Logger(log *corezaplogger.Logger) Middleware {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			requestID := r.Header.Get(requestIDHeader)
 
 			l := log.With(
-				corelogger.String("request_id", requestID),
-				corelogger.String("url", r.URL.String()),
+				zap.String("request_id", requestID),
+				zap.String("url", r.URL.String()),
 			)
 
-			ctx := corelogger.ToContext(r.Context(), l)
+			ctx := corezaplogger.ToContext(r.Context(), l)
 
 			next.ServeHTTP(w, r.WithContext(ctx))
 		})

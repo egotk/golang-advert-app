@@ -10,8 +10,12 @@ import (
 
 	coreconfig "github.com/egotk/golang-advert-app/internal/core/config"
 	corehttp "github.com/egotk/golang-advert-app/internal/core/http"
-	corelogger "github.com/egotk/golang-advert-app/internal/core/logger"
 	corezaplogger "github.com/egotk/golang-advert-app/internal/core/logger/zap"
+	corepgxpool "github.com/egotk/golang-advert-app/internal/core/postgres/pool/pgx"
+	userhttp "github.com/egotk/golang-advert-app/internal/features/user/controller/http"
+	userpostgres "github.com/egotk/golang-advert-app/internal/features/user/repo/postgres"
+	userusecase "github.com/egotk/golang-advert-app/internal/features/user/usecase"
+	"go.uber.org/zap"
 )
 
 func main() {
@@ -33,7 +37,7 @@ func main() {
 	}
 	defer logger.Close()
 
-	logger.Debug("app time zone", corelogger.Any("zone", time.Local))
+	logger.Debug("app time zone", zap.Any("zone", time.Local))
 
 	logger.Debug("init HTTP server")
 	httpServer := corehttp.NewServer(
@@ -43,10 +47,24 @@ func main() {
 		corehttp.Logger(logger),
 	)
 
+	logger.Debug("init postgres connection pool")
+	pool, err := corepgxpool.NewPool(
+		ctx,
+		corepgxpool.NewConfigMust(),
+	)
+	if err != nil {
+		logger.Fatal("failed to init postgres connection pool", zap.Error(err))
+	}
+	defer pool.Close()
+
 	apiVersionRouter := corehttp.NewAPIVersionRouter(corehttp.ApiV1)
+	userRepo := userpostgres.New(pool)
+	userUseCase := userusecase.New(userRepo)
+	userHTTPController := userhttp.New(userUseCase)
+	apiVersionRouter.RegisterRoutes(userHTTPController.Routes()...)
 	httpServer.RegisterAPIRouters(apiVersionRouter)
 
 	if err := httpServer.Run(ctx); err != nil {
-		logger.Error("HTTP server error", corelogger.Error(err))
+		logger.Error("HTTP server error", zap.Error(err))
 	}
 }

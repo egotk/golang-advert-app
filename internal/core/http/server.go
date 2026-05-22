@@ -6,19 +6,20 @@ import (
 	"fmt"
 	"net/http"
 
-	corelogger "github.com/egotk/golang-advert-app/internal/core/logger"
+	corezaplogger "github.com/egotk/golang-advert-app/internal/core/logger/zap"
+	"go.uber.org/zap"
 )
 
 type Server struct {
 	mux        *http.ServeMux
 	config     Config
-	log        corelogger.Logger
+	log        *corezaplogger.Logger
 	middleware []Middleware
 }
 
 func NewServer(
 	config Config,
-	log corelogger.Logger,
+	log *corezaplogger.Logger,
 	middleware ...Middleware,
 ) *Server {
 	return &Server{
@@ -53,7 +54,7 @@ func (s *Server) Run(ctx context.Context) error {
 	go func() {
 		defer close(ch)
 
-		s.log.Warn("start HTTP server", corelogger.String("addr", s.config.Addr))
+		s.log.Warn("start HTTP server", zap.String("addr", s.config.Addr))
 
 		err := server.ListenAndServe()
 
