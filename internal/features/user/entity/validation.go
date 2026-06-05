@@ -1,7 +1,9 @@
 package userentity
 
 import (
+	"path/filepath"
 	"regexp"
+	"strings"
 
 	corevalidator "github.com/egotk/golang-advert-app/internal/core/validator"
 )
@@ -28,6 +30,13 @@ var (
 	}
 
 	phoneRegex = regexp.MustCompile(`^\+[1-9]\d{1,14}$`)
+
+	imgPathSuffixes = map[string]struct{}{
+		".jpg":  {},
+		".jpeg": {},
+		".png":  {},
+		".webp": {},
+	}
 )
 
 func ValidateEmail(email string) error {
@@ -87,6 +96,11 @@ func ValidateRole(role string) error {
 }
 
 func ValidateImagePath(imagePath string) error {
-	// TODO:
+	ext := strings.ToLower(filepath.Ext(imagePath))
+
+	if _, ok := imgPathSuffixes[ext]; !ok {
+		return ErrInvalidImageFmt
+	}
+
 	return nil
 }

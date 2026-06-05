@@ -4,10 +4,11 @@ import (
 	"context"
 	"fmt"
 
+	corepostgres "github.com/egotk/golang-advert-app/internal/core/postgres"
 	userentity "github.com/egotk/golang-advert-app/internal/features/user/entity"
 )
 
-func (r *Repo) List(
+func (r *Repo) ListUsers(
 	ctx context.Context,
 	limit *int,
 	offset *int,
@@ -17,7 +18,9 @@ func (r *Repo) List(
 
 	query := `
 	SELECT id, version, email, full_name, phone_number, role, locked_until, created_at, updated_at, image_path
+
 	FROM advertapp.users
+
 	ORDER BY id ASC
 	LIMIT $1
 	OFFSET $2;
@@ -25,7 +28,7 @@ func (r *Repo) List(
 
 	rows, err := r.pool.Query(ctx, query, limit, offset)
 	if err != nil {
-		return nil, fmt.Errorf("select users: %w", err)
+		return nil, fmt.Errorf("SELECT: %w", corepostgres.MapError(err))
 	}
 	defer rows.Close()
 
@@ -46,13 +49,13 @@ func (r *Repo) List(
 			&user.ImagePath,
 		)
 		if err != nil {
-			return nil, fmt.Errorf("scan user: %w", err)
+			return nil, fmt.Errorf("scan: %w", corepostgres.MapError(err))
 		}
 
 		users = append(users, user)
 	}
 	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("rows: %w", err)
+		return nil, fmt.Errorf("rows: %w", corepostgres.MapError(err))
 	}
 
 	return users, nil

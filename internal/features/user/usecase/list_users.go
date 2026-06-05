@@ -8,7 +8,7 @@ import (
 	userentity "github.com/egotk/golang-advert-app/internal/features/user/entity"
 )
 
-func (uc *UseCase) List(
+func (uc *UseCase) ListUsers(
 	ctx context.Context,
 	limit *int,
 	offset *int,
@@ -27,7 +27,7 @@ func (uc *UseCase) List(
 		)
 	}
 
-	users, err := uc.repo.List(ctx, limit, offset)
+	users, err := uc.repo.ListUsers(ctx, limit, offset)
 	if err != nil {
 		return nil, fmt.Errorf("get users from repo: %w", err)
 	}

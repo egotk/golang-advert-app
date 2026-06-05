@@ -1,3 +1,3 @@
-DROP TABLE advertapp.users;
+DROP TABLE IF EXISTS advertapp.users;
 
-DROP SCHEMA advertapp;
+DROP SCHEMA IF EXISTS advertapp;

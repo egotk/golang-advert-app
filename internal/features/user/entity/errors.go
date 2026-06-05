@@ -1,24 +1,35 @@
 package userentity
 
-import "errors"
+import (
+	"fmt"
+
+	coreerrors "github.com/egotk/golang-advert-app/internal/core/errors"
+)
 
 var (
-	ErrEmptyPatch = errors.New("empty patch request")
+	ErrEmailCantBeNull    = fmt.Errorf("'Email' cant be null: %w", coreerrors.ErrInvalidArgument)
+	ErrInvalidEmailLen    = fmt.Errorf("invalid 'Email' len: %w", coreerrors.ErrInvalidArgument)
+	ErrInvalidEmailFormat = fmt.Errorf("invalid 'Email' format: %w", coreerrors.ErrInvalidArgument)
 
-	ErrEmailCantBeNull    = errors.New("'Email' cant be null")
-	ErrInvalidEmailLen    = errors.New("invalid 'Email' len")
-	ErrInvalidEmailFormat = errors.New("invalid 'Email' format")
+	ErrFullNameCantBeNull = fmt.Errorf("'FullName' cant be null: %w", coreerrors.ErrInvalidArgument)
+	ErrInvalidFullNameLen = fmt.Errorf("invalid 'FullName' len: %w", coreerrors.ErrInvalidArgument)
 
-	ErrFullNameCantBeNull = errors.New("'FullName' cant be null")
-	ErrInvalidFullNameLen = errors.New("invalid 'FullName' len")
+	ErrPhoneNumberCantBeNull    = fmt.Errorf("'PhoneNumber' cant be null: %w", coreerrors.ErrInvalidArgument)
+	ErrInvalidPhoneNumberLen    = fmt.Errorf("invalid 'PhoneNumber' len: %w", coreerrors.ErrInvalidArgument)
+	ErrInvalidPhoneNumberFormat = fmt.Errorf("invalid 'PhoneNumber' format: %w", coreerrors.ErrInvalidArgument)
 
-	ErrPhoneNumberCantBeNull    = errors.New("'PhoneNumber' cant be null")
-	ErrInvalidPhoneNumberLen    = errors.New("invalid 'PhoneNumber' len")
-	ErrInvalidPhoneNumberFormat = errors.New("invalid 'PhoneNumber' format")
+	ErrPasswordCantBeNull = fmt.Errorf("'Password' cant be null: %w", coreerrors.ErrInvalidArgument)
+	ErrInvalidPasswordLen = fmt.Errorf("invalid 'Password' len: %w", coreerrors.ErrInvalidArgument)
+	ErrInvalidPassword    = fmt.Errorf("invalid password: %w", coreerrors.ErrUnauthorized)
 
-	ErrPasswordCantBeNull = errors.New("'Password' cant be null")
-	ErrInvalidPasswordLen = errors.New("invalid 'Password' len")
+	ErrRoleCantBeNull = fmt.Errorf("'Role' cant be null: %w", coreerrors.ErrInvalidArgument)
+	ErrInvalidRole    = fmt.Errorf("'Role' is invalid: %w", coreerrors.ErrInvalidArgument)
 
-	ErrRoleCantBeNull = errors.New("'Role' cant be null")
-	ErrInvalidRole    = errors.New("'Role' is invalid")
+	ErrUserVersionConflict = fmt.Errorf("user version conflict: %w", coreerrors.ErrConflict)
+	ErrUserIsLocked        = fmt.Errorf("user is locked: %w", coreerrors.ErrUnauthorized)
+
+	ErrInvalidImageFmt = fmt.Errorf("invalid image format: %w", coreerrors.ErrInvalidArgument)
+
+	ErrRefreshTokenExpired = fmt.Errorf("refresh token expired: %w", coreerrors.ErrUnauthorized)
+	ErrTokenNotFound       = fmt.Errorf("token not found: %w", coreerrors.ErrUnauthorized)
 )

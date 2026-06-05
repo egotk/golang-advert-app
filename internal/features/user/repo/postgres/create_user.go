@@ -2,12 +2,13 @@ package userpostgres
 
 import (
 	"context"
+	"fmt"
 
 	corepostgres "github.com/egotk/golang-advert-app/internal/core/postgres"
 	userentity "github.com/egotk/golang-advert-app/internal/features/user/entity"
 )
 
-func (r *Repo) Create(
+func (r *Repo) CreateUser(
 	ctx context.Context,
 	user *userentity.User,
 ) error {
@@ -30,6 +31,7 @@ func (r *Repo) Create(
 	)
 	
 	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+	
 	RETURNING id, version;
 	`
 
@@ -54,7 +56,7 @@ func (r *Repo) Create(
 		&user.Version,
 	)
 	if err != nil {
-		return corepostgres.MapError(err)
+		return fmt.Errorf("scan: %w", corepostgres.MapError(err))
 	}
 
 	return nil

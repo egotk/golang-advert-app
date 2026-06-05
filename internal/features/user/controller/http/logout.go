@@ -1,0 +1,59 @@
+package userhttp
+
+import (
+	"net/http"
+
+	corehttprequest "github.com/egotk/golang-advert-app/internal/core/http/request"
+	corehttpresponse "github.com/egotk/golang-advert-app/internal/core/http/response"
+	corejwt "github.com/egotk/golang-advert-app/internal/core/jwt"
+	corezaplogger "github.com/egotk/golang-advert-app/internal/core/logger/zap"
+	userusecase "github.com/egotk/golang-advert-app/internal/features/user/usecase"
+)
+
+type logoutRequest struct {
+	RefreshToken string `json:"refresh_token" validate:"required,min=1,max=512"`
+}
+
+func (r logoutRequest) toDTO(userID int) userusecase.LogoutDTO {
+	return userusecase.LogoutDTO{
+		UserID:       userID,
+		RefreshToken: r.RefreshToken,
+	}
+}
+
+func (c *Controller) logout(rw http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	log := corezaplogger.FromContext(ctx)
+	responseHandler := corehttpresponse.New(log, rw)
+
+	claims, err := corejwt.ClaimsFromContext(ctx)
+	if err != nil {
+		responseHandler.ErrorResponse(err, "failed to get claims")
+
+		return
+	}
+
+	var request logoutRequest
+	if err := corehttprequest.DecodeAndValidate(r, &request); err != nil {
+		responseHandler.ErrorResponse(err, "failed to decode and validate logout request")
+
+		return
+	}
+
+	userID, err := claims.UserID()
+	if err != nil {
+		responseHandler.ErrorResponse(err, "failed to get userID")
+
+		return
+	}
+
+	dto := request.toDTO(userID)
+
+	if err := c.useCase.Logout(ctx, dto); err != nil {
+		responseHandler.ErrorResponse(err, "failed to logout")
+
+		return
+	}
+
+	responseHandler.NoContentResponse()
+}

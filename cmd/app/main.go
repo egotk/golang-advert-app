@@ -10,6 +10,7 @@ import (
 
 	coreconfig "github.com/egotk/golang-advert-app/internal/core/config"
 	corehttp "github.com/egotk/golang-advert-app/internal/core/http"
+	corejwt "github.com/egotk/golang-advert-app/internal/core/jwt"
 	corezaplogger "github.com/egotk/golang-advert-app/internal/core/logger/zap"
 	corepgxpool "github.com/egotk/golang-advert-app/internal/core/postgres/pool/pgx"
 	userhttp "github.com/egotk/golang-advert-app/internal/features/user/controller/http"
@@ -57,11 +58,18 @@ func main() {
 	}
 	defer pool.Close()
 
+	logger.Debug("init jwt service")
+	jwtConfig := corejwt.NewConfigMust()
+	jwtService := corejwt.NewService(jwtConfig)
+
 	apiVersionRouter := corehttp.NewAPIVersionRouter(corehttp.ApiV1)
+
+	logger.Debug("init feature: users")
 	userRepo := userpostgres.New(pool)
-	userUseCase := userusecase.New(userRepo)
+	userUseCase := userusecase.New(userRepo, jwtService)
 	userHTTPController := userhttp.New(userUseCase)
-	apiVersionRouter.RegisterRoutes(userHTTPController.Routes()...)
+
+	apiVersionRouter.RegisterRoutes(userHTTPController.Routes(jwtService)...)
 	httpServer.RegisterAPIRouters(apiVersionRouter)
 
 	if err := httpServer.Run(ctx); err != nil {

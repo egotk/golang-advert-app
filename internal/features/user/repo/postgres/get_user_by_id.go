@@ -2,12 +2,13 @@ package userpostgres
 
 import (
 	"context"
+	"fmt"
 
 	corepostgres "github.com/egotk/golang-advert-app/internal/core/postgres"
 	userentity "github.com/egotk/golang-advert-app/internal/features/user/entity"
 )
 
-func (r *Repo) GetByID(
+func (r *Repo) GetUserByID(
 	ctx context.Context,
 	id int,
 ) (userentity.User, error) {
@@ -16,7 +17,9 @@ func (r *Repo) GetByID(
 
 	query := `
 	SELECT id, version, email, full_name, phone_number, role, locked_until, created_at, updated_at, image_path
+
 	FROM advertapp.users
+	
 	WHERE id = $1;
 	`
 
@@ -37,7 +40,7 @@ func (r *Repo) GetByID(
 		&user.ImagePath,
 	)
 	if err != nil {
-		return userentity.User{}, corepostgres.MapError(err)
+		return userentity.User{}, fmt.Errorf("scan: %w", corepostgres.MapError(err))
 	}
 
 	return user, nil

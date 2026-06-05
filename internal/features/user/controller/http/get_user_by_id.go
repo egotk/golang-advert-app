@@ -10,10 +10,10 @@ import (
 
 type getByIDResponse dtoResponse
 
-func (c *Controller) getByID(rw http.ResponseWriter, r *http.Request) {
+func (c *Controller) getUserByID(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := corezaplogger.FromContext(ctx)
-	responseHandler := corehttpresponse.NewResponseHandler(log, rw)
+	responseHandler := corehttpresponse.New(log, rw)
 
 	userID, err := corehttprequest.GetIntPathParam("id", r)
 	if err != nil {
@@ -25,7 +25,7 @@ func (c *Controller) getByID(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := c.useCase.GetByID(ctx, userID)
+	user, err := c.useCase.GetUserByID(ctx, userID)
 	if err != nil {
 		responseHandler.ErrorResponse(
 			err,

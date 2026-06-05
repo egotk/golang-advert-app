@@ -6,7 +6,7 @@ import (
 
 	corehttp "github.com/egotk/golang-advert-app/internal/core/http"
 	userentity "github.com/egotk/golang-advert-app/internal/features/user/entity"
-	userdto "github.com/egotk/golang-advert-app/internal/features/user/usecase/dto"
+	userusecase "github.com/egotk/golang-advert-app/internal/features/user/usecase"
 )
 
 type Controller struct {
@@ -14,21 +14,36 @@ type Controller struct {
 }
 
 type useCase interface {
-	Create(
+	CreateUser(
 		ctx context.Context,
-		dto userdto.Create,
+		dto userusecase.CreateDTO,
 	) (userentity.User, error)
 
-	List(
+	ListUsers(
 		ctx context.Context,
 		limit *int,
 		offset *int,
 	) ([]userentity.User, error)
 
-	GetByID(
+	GetUserByID(
 		ctx context.Context,
 		id int,
 	) (userentity.User, error)
+
+	Login(
+		ctx context.Context,
+		dto userusecase.LoginDTO,
+	) (userusecase.LoginResultDTO, error)
+
+	Logout(
+		ctx context.Context,
+		dto userusecase.LogoutDTO,
+	) error
+
+	RefreshTokens(
+		ctx context.Context,
+		dto userusecase.RefreshTokensDTO,
+	) (userusecase.TokensDTO, error)
 }
 
 func New(useCase useCase) *Controller {
@@ -37,22 +52,42 @@ func New(useCase useCase) *Controller {
 	}
 }
 
-func (c *Controller) Routes() []corehttp.Route {
+func (c *Controller) Routes(jwtService corehttp.JWTService) []corehttp.Route {
+	jwt := corehttp.JWToken(jwtService)
+
 	return []corehttp.Route{
 		{
 			Method:  http.MethodPost,
 			Path:    "/users",
-			Handler: c.create,
+			Handler: c.createUser,
 		},
 		{
-			Method:  http.MethodGet,
-			Path:    "/users",
-			Handler: c.list,
+			Method:     http.MethodGet,
+			Path:       "/users",
+			Handler:    c.listUsers,
+			Middleware: []corehttp.Middleware{jwt},
 		},
 		{
-			Method:  http.MethodGet,
-			Path:    "/users/{id}",
-			Handler: c.getByID,
+			Method:     http.MethodGet,
+			Path:       "/users/{id}",
+			Handler:    c.getUserByID,
+			Middleware: []corehttp.Middleware{jwt},
+		},
+		{
+			Method:  http.MethodPost,
+			Path:    "/auth/login",
+			Handler: c.login,
+		},
+		{
+			Method:     http.MethodPost,
+			Path:       "/auth/logout",
+			Handler:    c.logout,
+			Middleware: []corehttp.Middleware{jwt},
+		},
+		{
+			Method:  http.MethodPost,
+			Path:    "/auth/refresh",
+			Handler: c.refreshTokens,
 		},
 	}
 }

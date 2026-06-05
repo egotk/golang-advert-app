@@ -2,7 +2,11 @@ package corehttp
 
 import (
 	"net/http"
+	"strings"
 
+	coreerrors "github.com/egotk/golang-advert-app/internal/core/errors"
+	corehttpresponse "github.com/egotk/golang-advert-app/internal/core/http/response"
+	corejwt "github.com/egotk/golang-advert-app/internal/core/jwt"
 	corezaplogger "github.com/egotk/golang-advert-app/internal/core/logger/zap"
 	"github.com/google/uuid"
 	"go.uber.org/zap"
@@ -56,6 +60,57 @@ func Logger(log *corezaplogger.Logger) Middleware {
 			ctx := corezaplogger.ToContext(r.Context(), l)
 
 			next.ServeHTTP(w, r.WithContext(ctx))
+		})
+	}
+}
+
+const authHeader = "Authorization"
+
+type JWTService interface {
+	ParseAccessToken(access string) (corejwt.Claims, error)
+}
+
+func JWToken(jwtService JWTService) Middleware {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+			ctx := r.Context()
+			responseHandler := corehttpresponse.From(ctx, rw)
+
+			auth := r.Header.Get(authHeader)
+			if auth == "" {
+				responseHandler.ErrorResponse(
+					coreerrors.ErrUnauthorized,
+					"failed to get Authorization header",
+				)
+
+				return
+			}
+
+			authParts := strings.Split(auth, " ")
+			if len(authParts) != 2 || !strings.EqualFold(authParts[0], "Bearer") {
+				responseHandler.ErrorResponse(
+					coreerrors.ErrUnauthorized,
+					"failed to parse Authorization header",
+				)
+
+				return
+			}
+
+			tokenString := authParts[1]
+
+			claims, err := jwtService.ParseAccessToken(tokenString)
+			if err != nil {
+				responseHandler.ErrorResponse(
+					coreerrors.ErrUnauthorized,
+					"failed to parse JWT",
+				)
+
+				return
+			}
+
+			ctx = corejwt.ClaimsToContext(ctx, claims)
+
+			next.ServeHTTP(rw, r.WithContext(ctx))
 		})
 	}
 }

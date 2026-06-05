@@ -27,7 +27,7 @@ func NewAPIVersionRouter(apiVersion ApiVersion) *APIVersionRouter {
 func (r *APIVersionRouter) RegisterRoutes(routes ...Route) {
 	for _, route := range routes {
 		pattern := fmt.Sprintf("%s %s", route.Method, route.Path)
-
-		r.Handle(pattern, route.Handler)
+		handler := ChainMiddleware(route.Handler, route.Middleware...)
+		r.Handle(pattern, handler)
 	}
 }

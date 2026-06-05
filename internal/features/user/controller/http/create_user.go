@@ -8,7 +8,7 @@ import (
 	corehttpresponse "github.com/egotk/golang-advert-app/internal/core/http/response"
 	corezaplogger "github.com/egotk/golang-advert-app/internal/core/logger/zap"
 	userentity "github.com/egotk/golang-advert-app/internal/features/user/entity"
-	userdto "github.com/egotk/golang-advert-app/internal/features/user/usecase/dto"
+	userusecase "github.com/egotk/golang-advert-app/internal/features/user/usecase"
 )
 
 type createRequest struct {
@@ -18,8 +18,8 @@ type createRequest struct {
 	Password    string `json:"password"`
 }
 
-func (r createRequest) toDTO() userdto.Create {
-	return userdto.Create{
+func (r createRequest) toDTO() userusecase.CreateDTO {
+	return userusecase.CreateDTO{
 		Email:       strings.ToLower(r.Email),
 		FullName:    r.FullName,
 		PhoneNumber: r.PhoneNumber,
@@ -45,10 +45,10 @@ func (r createRequest) Validate() error {
 
 type createResponse dtoResponse
 
-func (c *Controller) create(rw http.ResponseWriter, r *http.Request) {
+func (c *Controller) createUser(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := corezaplogger.FromContext(ctx)
-	responseHandler := corehttpresponse.NewResponseHandler(log, rw)
+	responseHandler := corehttpresponse.New(log, rw)
 
 	var request createRequest
 	if err := corehttprequest.DecodeAndValidate(r, &request); err != nil {
@@ -59,7 +59,7 @@ func (c *Controller) create(rw http.ResponseWriter, r *http.Request) {
 
 	dto := request.toDTO()
 
-	user, err := c.useCase.Create(ctx, dto)
+	user, err := c.useCase.CreateUser(ctx, dto)
 	if err != nil {
 		responseHandler.ErrorResponse(err, "failed to create user")
 

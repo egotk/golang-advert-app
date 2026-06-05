@@ -8,18 +8,18 @@ import (
 	userentity "github.com/egotk/golang-advert-app/internal/features/user/entity"
 )
 
-func (uc *UseCase) GetByID(
+func (uc *UseCase) GetUserByID(
 	ctx context.Context,
 	id int,
 ) (userentity.User, error) {
-	if id < 0 {
+	if id <= 0 {
 		return userentity.User{}, fmt.Errorf(
 			"id must be positive: %w",
 			coreerrors.ErrInvalidArgument,
 		)
 	}
 
-	user, err := uc.repo.GetByID(ctx, id)
+	user, err := uc.repo.GetUserByID(ctx, id)
 	if err != nil {
 		return userentity.User{}, fmt.Errorf(
 			"get user with id = %d from repo: %w",

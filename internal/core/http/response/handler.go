@@ -1,6 +1,7 @@
 package corehttpresponse
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"net/http"
@@ -10,22 +11,34 @@ import (
 	"go.uber.org/zap"
 )
 
-type ResponseHandler struct {
+type Handler struct {
 	log *corezaplogger.Logger
 	rw  http.ResponseWriter
 }
 
-func NewResponseHandler(
+func New(
 	log *corezaplogger.Logger,
 	rw http.ResponseWriter,
-) *ResponseHandler {
-	return &ResponseHandler{
+) *Handler {
+	return &Handler{
 		log: log,
 		rw:  rw,
 	}
 }
 
-func (h *ResponseHandler) JSONResponse(
+func From(
+	ctx context.Context,
+	rw http.ResponseWriter,
+) *Handler {
+	log := corezaplogger.FromContext(ctx)
+
+	return &Handler{
+		log: log,
+		rw:  rw,
+	}
+}
+
+func (h *Handler) JSONResponse(
 	responseBody any,
 	statusCode int,
 ) {
@@ -37,7 +50,11 @@ func (h *ResponseHandler) JSONResponse(
 	}
 }
 
-func (h *ResponseHandler) ErrorResponse(
+func (h *Handler) NoContentResponse() {
+	h.rw.WriteHeader(http.StatusNoContent)
+}
+
+func (h *Handler) ErrorResponse(
 	err error,
 	msg string,
 ) {
@@ -57,6 +74,10 @@ func (h *ResponseHandler) ErrorResponse(
 
 	case errors.Is(err, coreerrors.ErrConflict):
 		statusCode = http.StatusConflict
+		logFunc = h.log.Warn
+
+	case errors.Is(err, coreerrors.ErrUnauthorized):
+		statusCode = http.StatusUnauthorized
 		logFunc = h.log.Warn
 
 	default:

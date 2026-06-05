@@ -5,17 +5,16 @@ import (
 	"fmt"
 
 	userentity "github.com/egotk/golang-advert-app/internal/features/user/entity"
-	userdto "github.com/egotk/golang-advert-app/internal/features/user/usecase/dto"
 	"golang.org/x/crypto/bcrypt"
 )
 
-func (uc *UseCase) Create(
+func (uc *UseCase) CreateUser(
 	ctx context.Context,
-	dto userdto.Create,
+	dto CreateDTO,
 ) (userentity.User, error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(dto.Password), bcrypt.DefaultCost)
 	if err != nil {
-		return userentity.User{}, fmt.Errorf("failed to create bcrypt password hash: %w", err)
+		return userentity.User{}, fmt.Errorf("create bcrypt password hash: %w", err)
 	}
 
 	user := userentity.NewInitial(
@@ -25,8 +24,8 @@ func (uc *UseCase) Create(
 		string(hash),
 	)
 
-	if err := uc.repo.Create(ctx, &user); err != nil {
-		return userentity.User{}, fmt.Errorf("failed to store user in DB: %w", err)
+	if err := uc.repo.CreateUser(ctx, &user); err != nil {
+		return userentity.User{}, fmt.Errorf("store user in DB: %w", err)
 	}
 
 	return user, nil

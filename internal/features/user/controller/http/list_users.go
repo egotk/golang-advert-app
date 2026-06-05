@@ -10,10 +10,10 @@ import (
 
 type listResponse []dtoResponse
 
-func (c *Controller) list(rw http.ResponseWriter, r *http.Request) {
+func (c *Controller) listUsers(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := corezaplogger.FromContext(ctx)
-	responseHandler := corehttpresponse.NewResponseHandler(log, rw)
+	responseHandler := corehttpresponse.New(log, rw)
 
 	limit, offset, err := corehttprequest.GetLimitOffsetQueryParams(r)
 	if err != nil {
@@ -22,7 +22,7 @@ func (c *Controller) list(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	users, err := c.useCase.List(ctx, limit, offset)
+	users, err := c.useCase.ListUsers(ctx, limit, offset)
 	if err != nil {
 		responseHandler.ErrorResponse(err, "failed to get users")
 
