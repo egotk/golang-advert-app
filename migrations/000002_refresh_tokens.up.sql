@@ -4,6 +4,7 @@ CREATE TABLE advertapp.refresh_tokens(
     issued_at  TIMESTAMPTZ  NOT NULL DEFAULT now(),
     expires_at TIMESTAMPTZ  NOT NULL,
 
+    CONSTRAINT token_hash_len       CHECK(length(trim(token_hash)) > 0),
     CONSTRAINT expires_after_issued CHECK(expires_at > issued_at) 
 );
 
