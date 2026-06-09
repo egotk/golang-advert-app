@@ -80,6 +80,10 @@ func (h *Handler) ErrorResponse(
 		statusCode = http.StatusUnauthorized
 		logFunc = h.log.Warn
 
+	case errors.Is(err, coreerrors.ErrForbidden):
+		statusCode = http.StatusForbidden
+		logFunc = h.log.Debug
+
 	default:
 		statusCode = http.StatusInternalServerError
 		logFunc = h.log.Error

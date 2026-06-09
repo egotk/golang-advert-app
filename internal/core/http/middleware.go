@@ -1,6 +1,7 @@
 package corehttp
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -111,6 +112,38 @@ func JWToken(jwtService JWTService) Middleware {
 			ctx = corejwt.ClaimsToContext(ctx, claims)
 
 			next.ServeHTTP(rw, r.WithContext(ctx))
+		})
+	}
+}
+
+func Role(requiredRole string) Middleware {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+			ctx := r.Context()
+			responseHandler := corehttpresponse.From(ctx, rw)
+
+			claims, err := corejwt.ClaimsFromContext(ctx)
+			if err != nil {
+				responseHandler.ErrorResponse(
+					coreerrors.ErrUnauthorized,
+					"failed to get claims",
+				)
+
+				return
+			}
+
+			role := claims.Role
+
+			if role != requiredRole {
+				responseHandler.ErrorResponse(
+					coreerrors.ErrForbidden,
+					fmt.Sprintf("failed to use %s route as %s", requiredRole, role),
+				)
+
+				return
+			}
+
+			next.ServeHTTP(rw, r)
 		})
 	}
 }
