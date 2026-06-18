@@ -16,7 +16,7 @@ CREATE TABLE advertapp.adverts(
     user_id     INTEGER       NOT NULL  REFERENCES advertapp.users(id) ON DELETE CASCADE,
     title       VARCHAR(100)  NOT NULL,
     description VARCHAR(1500) NOT NULL,
-    price       BIGINT,
+    price       BIGINT        NOT NULL,
     category_id INTEGER       NOT NULL  REFERENCES advertapp.advert_categories(id) ON DELETE RESTRICT,
     status      VARCHAR(100)  NOT NULL  DEFAULT 'initial',
     views_count INTEGER       NOT NULL  DEFAULT 0,
@@ -26,7 +26,7 @@ CREATE TABLE advertapp.adverts(
     CONSTRAINT version_positive      CHECK(version > 0),
     CONSTRAINT title_len             CHECK(length(trim(title)) BETWEEN 1 AND 100),
     CONSTRAINT description_len       CHECK(length(trim(description)) BETWEEN 1 AND 1500),
-    CONSTRAINT price_valid           CHECK(price IS NULL OR price >= 0),
+    CONSTRAINT price_valid           CHECK(price >= 0),
     CONSTRAINT views_count_positive  CHECK(views_count >= 0),
     CONSTRAINT updated_after_created CHECK(updated_at >= created_at),
     CONSTRAINT status_valid          CHECK(status IN ('initial', 'active', 'rejected', 'blocked', 'archived'))

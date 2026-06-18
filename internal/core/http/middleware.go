@@ -3,6 +3,7 @@ package corehttp
 import (
 	"fmt"
 	"net/http"
+	"slices"
 	"strings"
 
 	coreerrors "github.com/egotk/golang-advert-app/internal/core/errors"
@@ -116,7 +117,7 @@ func JWToken(jwtService JWTService) Middleware {
 	}
 }
 
-func Role(requiredRole string) Middleware {
+func Role(requiredRoles ...string) Middleware {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 			ctx := r.Context()
@@ -134,10 +135,10 @@ func Role(requiredRole string) Middleware {
 
 			role := claims.Role
 
-			if role != requiredRole {
+			if slices.Contains(requiredRoles, role) {
 				responseHandler.ErrorResponse(
 					coreerrors.ErrForbidden,
-					fmt.Sprintf("failed to use %s route as %s", requiredRole, role),
+					fmt.Sprintf("role %s not allowed", role),
 				)
 
 				return

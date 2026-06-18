@@ -10,3 +10,17 @@ type Route struct {
 	Handler    http.HandlerFunc
 	Middleware []Middleware
 }
+
+func NewRoute(
+	method string,
+	path string,
+	handler http.HandlerFunc,
+	middleware ...Middleware,
+) Route {
+	return Route{
+		Method:     method,
+		Path:       path,
+		Handler:    handler,
+		Middleware: middleware,
+	}
+}

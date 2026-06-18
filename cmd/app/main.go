@@ -13,6 +13,12 @@ import (
 	corejwt "github.com/egotk/golang-advert-app/internal/core/jwt"
 	corezaplogger "github.com/egotk/golang-advert-app/internal/core/logger/zap"
 	corepgxpool "github.com/egotk/golang-advert-app/internal/core/postgres/pool/pgx"
+	adverthttp "github.com/egotk/golang-advert-app/internal/features/adverts/controller"
+	advertpostgres "github.com/egotk/golang-advert-app/internal/features/adverts/repo"
+	advertusecase "github.com/egotk/golang-advert-app/internal/features/adverts/usecase"
+	categoryhttp "github.com/egotk/golang-advert-app/internal/features/categories/controller"
+	categorypostgres "github.com/egotk/golang-advert-app/internal/features/categories/repo"
+	categoryusecase "github.com/egotk/golang-advert-app/internal/features/categories/usecase"
 	userhttp "github.com/egotk/golang-advert-app/internal/features/user/controller/http"
 	userpostgres "github.com/egotk/golang-advert-app/internal/features/user/repo/postgres"
 	userusecase "github.com/egotk/golang-advert-app/internal/features/user/usecase"
@@ -68,8 +74,20 @@ func main() {
 	userRepo := userpostgres.New(pool)
 	userUseCase := userusecase.New(userRepo, jwtService)
 	userHTTPController := userhttp.New(userUseCase)
-
 	apiVersionRouter.RegisterRoutes(userHTTPController.Routes(jwtService)...)
+
+	logger.Debug("init feature: adverts")
+	advertRepo := advertpostgres.New(pool)
+	advertUseCase := advertusecase.New(advertRepo)
+	advertHTTPController := adverthttp.New(advertUseCase)
+	apiVersionRouter.RegisterRoutes(advertHTTPController.Routes(jwtService)...)
+
+	logger.Debug("init feature: categories")
+	categoryRepo := categorypostgres.New(pool)
+	categoryUseCase := categoryusecase.New(categoryRepo)
+	categoryHTTPController := categoryhttp.New(categoryUseCase)
+	apiVersionRouter.RegisterRoutes(categoryHTTPController.Routes(jwtService)...)
+
 	httpServer.RegisterAPIRouters(apiVersionRouter)
 
 	if err := httpServer.Run(ctx); err != nil {
