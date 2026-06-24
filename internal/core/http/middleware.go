@@ -135,7 +135,7 @@ func Role(requiredRoles ...string) Middleware {
 
 			role := claims.Role
 
-			if slices.Contains(requiredRoles, role) {
+			if !slices.Contains(requiredRoles, role) {
 				responseHandler.ErrorResponse(
 					coreerrors.ErrForbidden,
 					fmt.Sprintf("role %s not allowed", role),

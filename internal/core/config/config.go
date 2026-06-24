@@ -8,6 +8,7 @@ import (
 
 type Config struct {
 	TimeZone *time.Location
+	Root     string
 }
 
 func New() (*Config, error) {
@@ -21,8 +22,11 @@ func New() (*Config, error) {
 		return nil, fmt.Errorf("load time zone: %s: %w", tz, err)
 	}
 
+	root := os.Getenv("PROJECT_ROOT")
+
 	return &Config{
 		TimeZone: zone,
+		Root:     root,
 	}, nil
 }
 

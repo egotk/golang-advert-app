@@ -4,7 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"io"
+	"mime"
 	"net/http"
+	"path/filepath"
 
 	coreerrors "github.com/egotk/golang-advert-app/internal/core/errors"
 	corezaplogger "github.com/egotk/golang-advert-app/internal/core/logger/zap"
@@ -100,4 +103,15 @@ func (h *Handler) ErrorResponse(
 		response,
 		statusCode,
 	)
+}
+
+func (h *Handler) FileResponse(
+	path string,
+	rc io.ReadCloser,
+) {
+	h.rw.Header().Set("Content-Type", mime.TypeByExtension(filepath.Ext(path)))
+
+	if _, err := io.Copy(h.rw, rc); err != nil {
+		h.log.Error("copy to RW", zap.Error(err))
+	}
 }

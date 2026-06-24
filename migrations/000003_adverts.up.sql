@@ -38,12 +38,15 @@ CREATE INDEX idx_adverts_category_id ON advertapp.adverts(category_id);
 CREATE TABLE advertapp.advert_images(
     id         SERIAL                PRIMARY KEY,
     advert_id  INTEGER      NOT NULL REFERENCES advertapp.adverts(id) ON DELETE CASCADE,
+    name       VARCHAR(255) NOT NULL,
     position   INT          NOT NULL DEFAULT 0,
     path       VARCHAR(255) NOT NULL UNIQUE,
     created_at TIMESTAMPTZ  NOT NULL DEFAULT now(),
 
     CONSTRAINT position_positive         CHECK(position >= 0),
-    CONSTRAINT unique_advert_id_position UNIQUE(advert_id, position)
+    CONSTRAINT unique_advert_id_position UNIQUE(advert_id, position),
+    CONSTRAINT name_len                  CHECK(length(trim(name)) BETWEEN 1 AND 255),
+    CONSTRAINT path_len                  CHECK(length(trim(path)) BETWEEN 1 AND 255)
 );
 
 CREATE INDEX idx_advert_images_advert_id ON advertapp.advert_images(advert_id);

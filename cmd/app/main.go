@@ -13,12 +13,13 @@ import (
 	corejwt "github.com/egotk/golang-advert-app/internal/core/jwt"
 	corezaplogger "github.com/egotk/golang-advert-app/internal/core/logger/zap"
 	corepgxpool "github.com/egotk/golang-advert-app/internal/core/postgres/pool/pgx"
-	adverthttp "github.com/egotk/golang-advert-app/internal/features/adverts/controller"
-	advertpostgres "github.com/egotk/golang-advert-app/internal/features/adverts/repo"
-	advertusecase "github.com/egotk/golang-advert-app/internal/features/adverts/usecase"
-	categoryhttp "github.com/egotk/golang-advert-app/internal/features/categories/controller"
-	categorypostgres "github.com/egotk/golang-advert-app/internal/features/categories/repo"
-	categoryusecase "github.com/egotk/golang-advert-app/internal/features/categories/usecase"
+	adverthttp "github.com/egotk/golang-advert-app/internal/features/advert/controller/http"
+	advertlocal "github.com/egotk/golang-advert-app/internal/features/advert/repo/local"
+	advertpostgres "github.com/egotk/golang-advert-app/internal/features/advert/repo/postgres"
+	advertusecase "github.com/egotk/golang-advert-app/internal/features/advert/usecase"
+	categoryhttp "github.com/egotk/golang-advert-app/internal/features/category/controller"
+	categorypostgres "github.com/egotk/golang-advert-app/internal/features/category/repo/postgres"
+	categoryusecase "github.com/egotk/golang-advert-app/internal/features/category/usecase"
 	userhttp "github.com/egotk/golang-advert-app/internal/features/user/controller/http"
 	userpostgres "github.com/egotk/golang-advert-app/internal/features/user/repo/postgres"
 	userusecase "github.com/egotk/golang-advert-app/internal/features/user/usecase"
@@ -78,7 +79,8 @@ func main() {
 
 	logger.Debug("init feature: adverts")
 	advertRepo := advertpostgres.New(pool)
-	advertUseCase := advertusecase.New(advertRepo)
+	advertStorage := advertlocal.New(config.Root)
+	advertUseCase := advertusecase.New(advertRepo, advertStorage)
 	advertHTTPController := adverthttp.New(advertUseCase)
 	apiVersionRouter.RegisterRoutes(advertHTTPController.Routes(jwtService)...)
 
