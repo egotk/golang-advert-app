@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	corepostgres "github.com/egotk/golang-advert-app/internal/core/postgres"
 	advertentity "github.com/egotk/golang-advert-app/internal/features/advert/entity"
 )
 
@@ -35,7 +36,7 @@ func (r *Repo) GetImageByID(
 		&image.CreatedAt,
 	)
 	if err != nil {
-		return 0, advertentity.AdvertImage{}, fmt.Errorf("scan: %w", err)
+		return 0, advertentity.AdvertImage{}, fmt.Errorf("scan: %w", corepostgres.MapError(err))
 	}
 
 	return advertID, image, nil

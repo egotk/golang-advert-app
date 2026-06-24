@@ -9,6 +9,7 @@ import (
 
 	coreerrors "github.com/egotk/golang-advert-app/internal/core/errors"
 	corehttpresponse "github.com/egotk/golang-advert-app/internal/core/http/response"
+	corejwt "github.com/egotk/golang-advert-app/internal/core/jwt"
 	corezaplogger "github.com/egotk/golang-advert-app/internal/core/logger/zap"
 	corevalidator "github.com/egotk/golang-advert-app/internal/core/validator"
 	advertusecase "github.com/egotk/golang-advert-app/internal/features/advert/usecase"
@@ -131,7 +132,7 @@ func (c *Controller) create(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userID, _, err := getUserInfoFromContext(ctx)
+	userID, _, err := corejwt.UserInfoFromContext(ctx)
 	if err != nil {
 		responseHandler.ErrorResponse(err, "failed to get 'UserInfo' from JWT")
 

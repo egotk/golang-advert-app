@@ -40,3 +40,17 @@ func ClaimsFromContext(ctx context.Context) (Claims, error) {
 
 	return claims, nil
 }
+
+func UserInfoFromContext(ctx context.Context) (int, string, error) {
+	claims, err := ClaimsFromContext(ctx)
+	if err != nil {
+		return 0, "", fmt.Errorf("failed to get 'Claims' from JWT: %w", err)
+	}
+
+	userID, err := claims.UserID()
+	if err != nil {
+		return 0, "", fmt.Errorf("failed to get 'UserID' from Claims: %w", err)
+	}
+
+	return userID, claims.Role, nil
+}

@@ -26,13 +26,6 @@ func (c *Controller) logout(rw http.ResponseWriter, r *http.Request) {
 	log := corezaplogger.FromContext(ctx)
 	responseHandler := corehttpresponse.New(log, rw)
 
-	claims, err := corejwt.ClaimsFromContext(ctx)
-	if err != nil {
-		responseHandler.ErrorResponse(err, "failed to get claims")
-
-		return
-	}
-
 	var request logoutRequest
 	if err := corehttprequest.DecodeAndValidate(r, &request); err != nil {
 		responseHandler.ErrorResponse(err, "failed to decode and validate logout request")
@@ -40,9 +33,9 @@ func (c *Controller) logout(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userID, err := claims.UserID()
+	userID, _, err := corejwt.UserInfoFromContext(ctx)
 	if err != nil {
-		responseHandler.ErrorResponse(err, "failed to get userID")
+		responseHandler.ErrorResponse(err, "failed to get 'UserInfo' from JWT")
 
 		return
 	}
