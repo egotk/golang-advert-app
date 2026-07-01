@@ -19,13 +19,13 @@ import (
 type createRequest struct {
 	Title         string `validate:"required,min=1,max=100"`
 	Description   string `validate:"required,min=1,max=1500"`
-	Price         int    `validate:"gte=0"`
-	CategoryID    int    `validate:"required,gt=0"`
+	Price         int64  `validate:"gte=0"`
+	CategoryID    int64  `validate:"required,gt=0"`
 	ImagesHeaders []*multipart.FileHeader
 }
 
 func (r createRequest) toDTO(
-	userID int,
+	userID int64,
 	images []imageentity.Image,
 ) advertusecase.CreateDTO {
 	return advertusecase.CreateDTO{
@@ -63,7 +63,7 @@ func createRequestFromMultipart(r *http.Request) (createRequest, error) {
 
 	description := r.FormValue(descriptionKey)
 
-	price, err := strconv.Atoi(r.FormValue(priceKey))
+	price, err := strconv.ParseInt(r.FormValue(priceKey), 10, 64)
 	if err != nil {
 		return createRequest{}, fmt.Errorf(
 			"get 'Price' from multipart: %v: %w",
@@ -72,7 +72,7 @@ func createRequestFromMultipart(r *http.Request) (createRequest, error) {
 		)
 	}
 
-	categoryID, err := strconv.Atoi(r.FormValue(categoryIDKey))
+	categoryID, err := strconv.ParseInt(r.FormValue(categoryIDKey), 10, 64)
 	if err != nil {
 		return createRequest{}, fmt.Errorf(
 			"get 'CategoryID' from multipart: %v: %w",

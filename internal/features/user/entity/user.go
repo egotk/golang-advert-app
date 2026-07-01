@@ -8,14 +8,14 @@ const (
 )
 
 type User struct {
-	ID               int
-	Version          int
+	ID               int64
+	Version          int64
 	Email            string
 	FullName         string
 	PhoneNumber      string
 	PasswordHash     string
 	Role             string
-	FailedLoginCount int
+	FailedLoginCount int64
 	LockedUntil      *time.Time
 	CreatedAt        time.Time
 	UpdatedAt        time.Time
@@ -23,14 +23,14 @@ type User struct {
 }
 
 func New(
-	id int,
-	version int,
+	id int64,
+	version int64,
 	email string,
 	fullName string,
 	phoneNumber string,
 	passwordHash string,
 	role string,
-	failedLoginCount int,
+	failedLoginCount int64,
 	lockedUntil *time.Time,
 	createdAt time.Time,
 	updatedAt time.Time,

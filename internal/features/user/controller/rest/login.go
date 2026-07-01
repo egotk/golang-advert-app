@@ -10,8 +10,8 @@ import (
 )
 
 type loginRequest struct {
-	Email    string `json:"email"    validate:"required,min=3,max=255,email"`
-	Password string `json:"password" validate:"required,min=8,max=36"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 func (r loginRequest) toDTO() userusecase.LoginDTO {
@@ -22,7 +22,7 @@ func (r loginRequest) toDTO() userusecase.LoginDTO {
 }
 
 type loginResponse struct {
-	UserID       int    `json:"user_id"`
+	UserID       int64  `json:"user_id"`
 	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
 }
@@ -33,8 +33,8 @@ func (c *Controller) login(rw http.ResponseWriter, r *http.Request) {
 	responseHandler := corehttpresponse.New(log, rw)
 
 	var request loginRequest
-	if err := corehttprequest.DecodeAndValidate(r, &request); err != nil {
-		responseHandler.ErrorResponse(err, "failed to decode and validate HTTP request")
+	if err := corehttprequest.Decode(r, &request); err != nil {
+		responseHandler.ErrorResponse(err, "failed to decode HTTP request")
 
 		return
 	}

@@ -10,7 +10,7 @@ import (
 )
 
 type countResponse struct {
-	Count int `json:"count"`
+	Count int64 `json:"count"`
 }
 
 func (c *Controller) count(rw http.ResponseWriter, r *http.Request) {

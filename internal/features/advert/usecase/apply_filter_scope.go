@@ -6,7 +6,7 @@ import (
 )
 
 func applyFilterScope(
-	userID int,
+	userID int64,
 	userRole string,
 	filter *advertentity.Filter,
 ) error {

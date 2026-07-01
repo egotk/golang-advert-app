@@ -9,7 +9,7 @@ import (
 
 func (uc *UseCase) Delete(
 	ctx context.Context,
-	id int,
+	id int64,
 ) error {
 	if id < 1 {
 		return fmt.Errorf("'ID' must be positive: %w", coreerrors.ErrInvalidArgument)

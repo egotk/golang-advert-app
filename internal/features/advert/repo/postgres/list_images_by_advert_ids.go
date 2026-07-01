@@ -10,8 +10,8 @@ import (
 
 func (r *Repo) ListImagesByAdvertIDs(
 	ctx context.Context,
-	ids []int,
-) (map[int][]advertentity.AdvertImage, error) {
+	ids []int64,
+) (map[int64][]advertentity.AdvertImage, error) {
 	ctx, cancel := context.WithTimeout(ctx, r.pool.OpTimeout())
 	defer cancel()
 
@@ -31,9 +31,9 @@ func (r *Repo) ListImagesByAdvertIDs(
 	}
 	defer rows.Close()
 
-	imagesByAdvertID := make(map[int][]advertentity.AdvertImage)
+	imagesByAdvertID := make(map[int64][]advertentity.AdvertImage)
 	for rows.Next() {
-		var advertID int
+		var advertID int64
 		var image advertentity.AdvertImage
 
 		err := rows.Scan(

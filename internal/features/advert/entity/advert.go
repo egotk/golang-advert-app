@@ -13,26 +13,26 @@ const (
 )
 
 type Advert struct {
-	ID          int
-	Version     int
-	UserID      int
+	ID          int64
+	Version     int64
+	UserID      int64
 	Title       string
 	Description string
-	Price       int
-	CategoryID  int
+	Price       int64
+	CategoryID  int64
 	Status      Status
-	ViewsCount  int
+	ViewsCount  int64
 	Images      []AdvertImage
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }
 
 func NewInitial(
-	userID int,
+	userID int64,
 	title string,
 	description string,
-	price int,
-	categoryID int,
+	price int64,
+	categoryID int64,
 ) Advert {
 	const (
 		initialID         = -1

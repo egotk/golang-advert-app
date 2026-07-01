@@ -10,7 +10,7 @@ import (
 
 func (r *Repo) ReissueRefreshToken(
 	ctx context.Context,
-	userID int,
+	userID int64,
 	oldHash string,
 	newToken userentity.RefreshToken,
 ) error {

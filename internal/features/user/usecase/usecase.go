@@ -21,13 +21,13 @@ type repo interface {
 
 	ListUsers(
 		ctx context.Context,
-		limit *int,
-		offset *int,
+		limit *int64,
+		offset *int64,
 	) ([]userentity.User, error)
 
 	GetUserByID(
 		ctx context.Context,
-		id int,
+		id int64,
 	) (userentity.User, error)
 
 	GetUserByEmail(
@@ -47,34 +47,34 @@ type repo interface {
 
 	DeleteRefreshTokenByHash(
 		ctx context.Context,
-		userId int,
+		userId int64,
 		hash string,
 	) error
 
 	ReissueRefreshToken(
 		ctx context.Context,
-		userID int,
+		userID int64,
 		oldHash string,
 		newToken userentity.RefreshToken,
 	) error
 
 	IncrementFailedLoginCount(
 		ctx context.Context,
-		id int,
-		version int,
+		id int64,
+		version int64,
 	) (*time.Time, error)
 
 	ResetFailedLoginCount(
 		ctx context.Context,
-		id int,
-		version int,
+		id int64,
+		version int64,
 	) error
 }
 
 type jwtService interface {
 	IssuePair(
 		role string,
-		userId int,
+		userId int64,
 	) (corejwt.Pair, error)
 }
 

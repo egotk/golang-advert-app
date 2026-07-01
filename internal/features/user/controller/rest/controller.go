@@ -21,13 +21,13 @@ type useCase interface {
 
 	ListUsers(
 		ctx context.Context,
-		limit *int,
-		offset *int,
+		limit *int64,
+		offset *int64,
 	) ([]userentity.User, error)
 
 	GetUserByID(
 		ctx context.Context,
-		id int,
+		id int64,
 	) (userentity.User, error)
 
 	Login(

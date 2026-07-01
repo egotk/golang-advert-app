@@ -8,14 +8,9 @@ import (
 	"time"
 
 	coreerrors "github.com/egotk/golang-advert-app/internal/core/errors"
-	corevalidator "github.com/egotk/golang-advert-app/internal/core/validator"
 )
 
-type validatable interface {
-	Validate() error
-}
-
-func DecodeAndValidate(r *http.Request, dest any) error {
+func Decode(r *http.Request, dest any) error {
 	if err := json.NewDecoder(r.Body).Decode(dest); err != nil {
 		return fmt.Errorf(
 			"decode json: %v: %w",
@@ -24,29 +19,29 @@ func DecodeAndValidate(r *http.Request, dest any) error {
 		)
 	}
 
-	var err error
+	// var err error
 
-	value, ok := dest.(validatable)
-	if ok {
-		err = value.Validate()
-	} else {
-		validator := corevalidator.Instance()
+	// value, ok := dest.(validatable)
+	// if ok {
+	// 	err = value.Validate()
+	// } else {
+	// 	validator := corevalidator.Instance()
 
-		err = validator.Struct(dest)
-	}
+	// 	err = validator.Struct(dest)
+	// }
 
-	if err != nil {
-		return fmt.Errorf(
-			"validate request: %v: %w",
-			err,
-			coreerrors.ErrInvalidArgument,
-		)
-	}
+	// if err != nil {
+	// 	return fmt.Errorf(
+	// 		"validate request: %v: %w",
+	// 		err,
+	// 		coreerrors.ErrInvalidArgument,
+	// 	)
+	// }
 
 	return nil
 }
 
-func GetIntPathParam(key string, r *http.Request) (int, error) {
+func GetIntPathParam(key string, r *http.Request) (int64, error) {
 	param := r.PathValue(key)
 	if param == "" {
 		return 0, fmt.Errorf(
@@ -56,7 +51,7 @@ func GetIntPathParam(key string, r *http.Request) (int, error) {
 		)
 	}
 
-	value, err := strconv.Atoi(param)
+	value, err := strconv.ParseInt(param, 10, 64)
 	if err != nil {
 		return 0, fmt.Errorf(
 			"path param='%s' by key='%s' is not a valid int: %v: %w",
@@ -70,13 +65,13 @@ func GetIntPathParam(key string, r *http.Request) (int, error) {
 	return value, nil
 }
 
-func GetIntQueryParam(key string, r *http.Request) (*int, error) {
+func GetIntQueryParam(key string, r *http.Request) (*int64, error) {
 	param := r.URL.Query().Get(key)
 	if param == "" {
 		return nil, nil
 	}
 
-	value, err := strconv.Atoi(param)
+	value, err := strconv.ParseInt(param, 10, 64)
 	if err != nil {
 		return nil, fmt.Errorf(
 			"param='%s' by key='%s' is not a valid int: %v: %w",
@@ -113,7 +108,7 @@ func GetTimeQueryParam(key string, r *http.Request) (*time.Time, error) {
 	return &time, nil
 }
 
-func GetLimitOffsetQueryParams(r *http.Request) (*int, *int, error) {
+func GetLimitOffsetQueryParams(r *http.Request) (*int64, *int64, error) {
 	const (
 		limitQueryParamKey  = "limit"
 		offsetQueryParamKey = "offset"

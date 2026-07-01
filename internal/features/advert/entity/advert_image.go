@@ -3,9 +3,9 @@ package advertentity
 import "time"
 
 type AdvertImage struct {
-	ID        int
+	ID        int64
 	Name      string
-	Position  int
+	Position  int64
 	Path      string
 	CreatedAt time.Time
 }

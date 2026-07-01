@@ -20,13 +20,13 @@ type repo interface {
 
 	GetByID(
 		ctx context.Context,
-		id int,
+		id int64,
 	) (advertentity.Advert, error)
 
 	List(
 		ctx context.Context,
-		limit *int,
-		offset *int,
+		limit *int64,
+		offset *int64,
 		filter advertentity.Filter,
 	) ([]advertentity.Advert, error)
 
@@ -37,50 +37,50 @@ type repo interface {
 
 	ChangeStatus(
 		ctx context.Context,
-		id int,
+		id int64,
 		oldStatus advertentity.Status,
 		newStatus advertentity.Status,
 	) (advertentity.Advert, error)
 
 	IncrementViewsCount(
 		ctx context.Context,
-		id int,
+		id int64,
 	) error
 
 	DeleteByID(
 		ctx context.Context,
-		id int,
+		id int64,
 	) error
 
 	Count(
 		ctx context.Context,
 		filter advertentity.Filter,
-	) (int, error)
+	) (int64, error)
 
 	CreateImages(
 		ctx context.Context,
-		advertID int,
+		advertID int64,
 		images []advertentity.AdvertImage,
 	) error
 
 	GetImageByID(
 		ctx context.Context,
-		imageID int,
-	) (int, advertentity.AdvertImage, error)
+		imageID int64,
+	) (int64, advertentity.AdvertImage, error)
 
 	ListImagesByAdvertID(
 		ctx context.Context,
-		advertID int,
+		advertID int64,
 	) ([]advertentity.AdvertImage, error)
 
 	ListImagesByAdvertIDs(
 		ctx context.Context,
-		ids []int,
-	) (map[int][]advertentity.AdvertImage, error)
+		ids []int64,
+	) (map[int64][]advertentity.AdvertImage, error)
 
 	DeleteImageByID(
 		ctx context.Context,
-		advertID int,
+		advertID int64,
 	) error
 }
 

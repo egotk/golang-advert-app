@@ -10,8 +10,8 @@ import (
 
 func (r *Repo) ListUsers(
 	ctx context.Context,
-	limit *int,
-	offset *int,
+	limit *int64,
+	offset *int64,
 ) ([]userentity.User, error) {
 	ctx, cancel := context.WithTimeout(ctx, r.pool.OpTimeout())
 	defer cancel()

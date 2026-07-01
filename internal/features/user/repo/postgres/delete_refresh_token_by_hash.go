@@ -9,7 +9,7 @@ import (
 
 func (r *Repo) DeleteRefreshTokenByHash(
 	ctx context.Context,
-	userId int,
+	userId int64,
 	hash string,
 ) error {
 	ctx, cancel := context.WithTimeout(ctx, r.pool.OpTimeout())

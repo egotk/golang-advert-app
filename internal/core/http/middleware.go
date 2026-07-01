@@ -66,13 +66,13 @@ func Logger(log *corezaplogger.Logger) Middleware {
 	}
 }
 
-const authHeader = "Authorization"
-
 type JWTService interface {
 	ParseAccessToken(access string) (corejwt.Claims, error)
 }
 
 func JWToken(jwtService JWTService) Middleware {
+	const authHeader = "Authorization"
+
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 			ctx := r.Context()

@@ -11,8 +11,8 @@ import (
 
 func (r *Repo) List(
 	ctx context.Context,
-	limit *int,
-	offset *int,
+	limit *int64,
+	offset *int64,
 	filter advertentity.Filter,
 ) ([]advertentity.Advert, error) {
 	ctx, cancel := context.WithTimeout(ctx, r.pool.OpTimeout())

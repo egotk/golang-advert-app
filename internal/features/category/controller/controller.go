@@ -29,7 +29,7 @@ type useCase interface {
 
 	Delete(
 		ctx context.Context,
-		id int,
+		id int64,
 	) error
 }
 

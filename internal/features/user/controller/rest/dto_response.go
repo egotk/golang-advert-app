@@ -7,8 +7,8 @@ import (
 )
 
 type dtoResponse struct {
-	ID          int        `json:"id"`
-	Version     int        `json:"version"`
+	ID          int64      `json:"id"`
+	Version     int64      `json:"version"`
 	Email       string     `json:"email"`
 	FullName    string     `json:"full_name"`
 	PhoneNumber string     `json:"phone_number"`

@@ -10,8 +10,8 @@ import (
 
 func (r *Repo) IncrementFailedLoginCount(
 	ctx context.Context,
-	id int,
-	version int,
+	id int64,
+	version int64,
 ) (*time.Time, error) {
 	ctx, cancel := context.WithTimeout(ctx, r.pool.OpTimeout())
 	defer cancel()

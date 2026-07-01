@@ -5,13 +5,13 @@ const (
 )
 
 type Category struct {
-	ID       int
-	ParentID *int
+	ID       int64
+	ParentID *int64
 	Name     string
 }
 
 func NewInitial(
-	parentID *int,
+	parentID *int64,
 	name string,
 ) Category {
 	return Category{

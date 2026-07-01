@@ -10,8 +10,8 @@ import (
 
 func (r *Repo) GetImageByID(
 	ctx context.Context,
-	imageID int,
-) (int, advertentity.AdvertImage, error) {
+	imageID int64,
+) (int64, advertentity.AdvertImage, error) {
 	ctx, cancel := context.WithTimeout(ctx, r.pool.OpTimeout())
 	defer cancel()
 
@@ -25,7 +25,7 @@ func (r *Repo) GetImageByID(
 
 	row := r.pool.QueryRow(ctx, query, imageID)
 
-	var advertID int
+	var advertID int64
 	var image advertentity.AdvertImage
 	err := row.Scan(
 		&advertID,

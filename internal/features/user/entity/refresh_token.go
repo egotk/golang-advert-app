@@ -4,7 +4,7 @@ import "time"
 
 type RefreshToken struct {
 	Hash      string
-	UserID    int
+	UserID    int64
 	IssuedAt  time.Time
 	ExpiresAt time.Time
 }

@@ -11,14 +11,14 @@ import (
 )
 
 type patchRequest struct {
-	Version     int     `json:"version" validate:"required,gt=0"`
+	Version     int64   `json:"version" validate:"required,gt=0"`
 	Title       *string `json:"title" validate:"omitempty,min=1,max=100"`
 	Description *string `json:"description" validate:"omitempty,min=1,max=1500"`
-	Price       *int    `json:"price" validate:"omitempty,gte=0"`
-	CategoryID  *int    `json:"category_id" validate:"omitempty,gt=0"`
+	Price       *int64  `json:"price" validate:"omitempty,gte=0"`
+	CategoryID  *int64  `json:"category_id" validate:"omitempty,gt=0"`
 }
 
-func (r patchRequest) toDTO(advertID, userID int, userRole string) advertusecase.PatchDTO {
+func (r patchRequest) toDTO(advertID, userID int64, userRole string) advertusecase.PatchDTO {
 	return advertusecase.PatchDTO{
 		UserID:      userID,
 		UserRole:    userRole,
@@ -37,7 +37,7 @@ func (c *Controller) patch(rw http.ResponseWriter, r *http.Request) {
 	responseHandler := corehttpresponse.New(log, rw)
 
 	var request patchRequest
-	if err := corehttprequest.DecodeAndValidate(r, &request); err != nil {
+	if err := corehttprequest.Decode(r, &request); err != nil {
 		responseHandler.ErrorResponse(err, "failed to decode and validate patch advert HTTP request")
 
 		return

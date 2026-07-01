@@ -7,9 +7,9 @@ import (
 )
 
 type advertImageResponse struct {
-	ID        int       `json:"id"`
+	ID        int64     `json:"id"`
 	Name      string    `json:"name"`
-	Position  int       `json:"position"`
+	Position  int64     `json:"position"`
 	CreatedAt time.Time `json:"created_at"`
 }
 
@@ -23,12 +23,12 @@ func advertImageResponseFromEntity(i advertentity.AdvertImage) advertImageRespon
 }
 
 type advertImagesResponse struct {
-	Count  int                   `json:"count"`
+	Count  int64                 `json:"count"`
 	Images []advertImageResponse `json:"images"`
 }
 
 func imagesResponseFromEntities(images []advertentity.AdvertImage) advertImagesResponse {
-	count := len(images)
+	count := int64(len(images))
 	imageResponses := make([]advertImageResponse, len(images))
 
 	for i, img := range images {
@@ -42,13 +42,13 @@ func imagesResponseFromEntities(images []advertentity.AdvertImage) advertImagesR
 }
 
 type advertResponse struct {
-	ID          int                  `json:"id"`
-	Version     int                  `json:"version"`
-	UserID      int                  `json:"user_id"`
+	ID          int64                `json:"id"`
+	Version     int64                `json:"version"`
+	UserID      int64                `json:"user_id"`
 	Title       string               `json:"title"`
 	Description string               `json:"description"`
-	Price       int                  `json:"price"`
-	CategoryID  int                  `json:"category_id"`
+	Price       int64                `json:"price"`
+	CategoryID  int64                `json:"category_id"`
 	Status      string               `json:"status"`
 	Images      advertImagesResponse `json:"advert_images"`
 	CreatedAt   time.Time            `json:"created_at"`
@@ -72,11 +72,11 @@ func advertResponseFromEntity(a advertentity.Advert) advertResponse {
 }
 
 type advertsResponse struct {
-	Count   int              `json:"count"`
+	Count   int64            `json:"count"`
 	Adverts []advertResponse `json:"adverts"`
 }
 
-func advertsResponseFromEntities(count int, adverts []advertentity.Advert) advertsResponse {
+func advertsResponseFromEntities(count int64, adverts []advertentity.Advert) advertsResponse {
 	advertResponses := make([]advertResponse, len(adverts))
 
 	for i, a := range adverts {

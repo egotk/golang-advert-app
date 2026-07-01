@@ -10,7 +10,7 @@ import (
 
 func (r *Repo) GetUserByID(
 	ctx context.Context,
-	id int,
+	id int64,
 ) (userentity.User, error) {
 	ctx, cancel := context.WithTimeout(ctx, r.pool.OpTimeout())
 	defer cancel()

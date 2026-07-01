@@ -10,7 +10,7 @@ import (
 
 func (uc *UseCase) Reject(
 	ctx context.Context,
-	id int,
+	id int64,
 ) (advertentity.Advert, error) {
 	if id <= 0 {
 		return advertentity.Advert{}, fmt.Errorf("'ID' must be positive: %w", coreerrors.ErrInvalidArgument)

@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"time"
 
+	coreerrors "github.com/egotk/golang-advert-app/internal/core/errors"
 	corejwt "github.com/egotk/golang-advert-app/internal/core/jwt"
+	corevalidator "github.com/egotk/golang-advert-app/internal/core/validator"
 	userentity "github.com/egotk/golang-advert-app/internal/features/user/entity"
 )
 
@@ -13,6 +15,11 @@ func (uc *UseCase) RefreshTokens(
 	ctx context.Context,
 	dto RefreshTokensDTO,
 ) (TokensDTO, error) {
+	validator := corevalidator.Instance()
+	if err := validator.Struct(dto); err != nil {
+		return TokensDTO{}, fmt.Errorf("validate DTO: %v: %w", err, coreerrors.ErrInvalidArgument)
+	}
+
 	oldHash := corejwt.HashToken(dto.RefreshToken)
 
 	oldToken, err := uc.repo.GetRefreshTokenByHash(ctx, oldHash)

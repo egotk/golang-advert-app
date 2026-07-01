@@ -10,8 +10,8 @@ import (
 
 func (uc *UseCase) ListUsers(
 	ctx context.Context,
-	limit *int,
-	offset *int,
+	limit *int64,
+	offset *int64,
 ) ([]userentity.User, error) {
 	if limit != nil && *limit < 0 {
 		return nil, fmt.Errorf(

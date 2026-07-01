@@ -17,7 +17,7 @@ import (
 )
 
 type createImagesRequest struct {
-	AdvertID      int `validate:"required,gt=0"`
+	AdvertID      int64 `validate:"required,gt=0"`
 	ImagesHeaders []*multipart.FileHeader
 }
 
@@ -38,7 +38,7 @@ func createImagesRequestFromMultipart(r *http.Request) (createImagesRequest, err
 		)
 	}
 
-	advertID, err := strconv.Atoi(r.FormValue(advertIDKey))
+	advertID, err := strconv.ParseInt(r.FormValue(advertIDKey), 10, 64)
 	if err != nil {
 		return createImagesRequest{}, fmt.Errorf(
 			"get 'AdvertID' from multipart: %v: %w",

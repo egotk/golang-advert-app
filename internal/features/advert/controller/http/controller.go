@@ -29,7 +29,7 @@ type useCase interface {
 	List(
 		ctx context.Context,
 		dto advertusecase.ListDTO,
-	) (int, []advertentity.Advert, error)
+	) (int64, []advertentity.Advert, error)
 
 	Patch(
 		ctx context.Context,
@@ -38,12 +38,12 @@ type useCase interface {
 
 	Approve(
 		ctx context.Context,
-		id int,
+		id int64,
 	) (advertentity.Advert, error)
 
 	Reject(
 		ctx context.Context,
-		id int,
+		id int64,
 	) (advertentity.Advert, error)
 
 	Archive(
@@ -59,7 +59,7 @@ type useCase interface {
 	Count(
 		ctx context.Context,
 		dto advertusecase.CountDTO,
-	) (int, error)
+	) (int64, error)
 
 	CreateImages(
 		ctx context.Context,

@@ -8,7 +8,7 @@ import (
 func (uc *UseCase) Count(
 	ctx context.Context,
 	dto CountDTO,
-) (int, error) {
+) (int64, error) {
 	if err := validateFilter(dto.Filter); err != nil {
 		return 0, fmt.Errorf("validate filter: %w", err)
 	}

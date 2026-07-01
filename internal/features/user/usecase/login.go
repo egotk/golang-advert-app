@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"time"
 
+	coreerrors "github.com/egotk/golang-advert-app/internal/core/errors"
 	corejwt "github.com/egotk/golang-advert-app/internal/core/jwt"
+	corevalidator "github.com/egotk/golang-advert-app/internal/core/validator"
 	userentity "github.com/egotk/golang-advert-app/internal/features/user/entity"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -14,6 +16,11 @@ func (uc *UseCase) Login(
 	ctx context.Context,
 	dto LoginDTO,
 ) (LoginResultDTO, error) {
+	validator := corevalidator.Instance()
+	if err := validator.Struct(dto); err != nil {
+		return LoginResultDTO{}, fmt.Errorf("validate DTO: %v: %w", err, coreerrors.ErrInvalidArgument)
+	}
+
 	user, err := uc.repo.GetUserByEmail(ctx, dto.Email)
 	if err != nil {
 		return LoginResultDTO{}, fmt.Errorf("get user with email: %w", err)

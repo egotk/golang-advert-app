@@ -12,7 +12,7 @@ import (
 func (r *Repo) Count(
 	ctx context.Context,
 	filter advertentity.Filter,
-) (int, error) {
+) (int64, error) {
 	ctx, cancel := context.WithTimeout(ctx, r.pool.OpTimeout())
 	defer cancel()
 
@@ -32,7 +32,7 @@ func (r *Repo) Count(
 	}
 	queryBuilder.WriteString(";")
 
-	var count int
+	var count int64
 	row := r.pool.QueryRow(ctx, queryBuilder.String(), args...)
 	if err := row.Scan(&count); err != nil {
 		return 0, fmt.Errorf("select count: %w", corepostgres.MapError(err))

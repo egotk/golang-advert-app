@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package user;
+
+option go_package = "github.com/egotk/golang-advert-app/internal/gen/user;userpb";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+service User {
+    rpc Create (CreateRequest) returns (UserResponse);
+    rpc Login (LoginRequest) returns (LoginResponse);
+    rpc Logout (LogoutRequest) returns (google.protobuf.Empty);
+    rpc List (ListRequest) returns (UsersResponse);
+    rpc GetByID (GetByIDRequest) returns (UserResponse);
+    rpc RefreshTokens (RefreshTokensRequest) returns (RefreshTokensResponse);
+}
+
+message UserResponse {
+    int64 id = 1;
+    int64 version = 2;
+    string email = 3;
+    string full_name = 4;
+    string phone_number = 5;
+    string role = 6;
+    google.protobuf.Timestamp locked_until = 7;
+    google.protobuf.Timestamp created_at = 8;
+    google.protobuf.Timestamp updated_at = 9;
+    optional string image_path = 10;
+}
+
+message UsersResponse {
+    repeated UserResponse users = 1;
+}
+
+message CreateRequest {
+    string email = 1; 
+    string full_name = 2;
+    string phone_number = 3;
+    string password = 4;
+}
+
+message LoginRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message LoginResponse {
+    int64 user_id = 1;
+    string access_token = 2;
+    string refresh_token = 3;
+}
+
+message GetByIDRequest {
+    int64 user_id = 1;
+}
+
+message LogoutRequest {
+    string refresh_token = 1;
+}
+
+message ListRequest {
+    optional int64 limit = 1;
+    optional int64 offset = 2;
+}
+
+message RefreshTokensRequest {
+    string refresh_token = 1;
+}
+
+message RefreshTokensResponse {
+    string access_token = 1;
+    string refresh_token = 2;
+}
+

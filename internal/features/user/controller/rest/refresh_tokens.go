@@ -30,8 +30,8 @@ func (c *Controller) refreshTokens(rw http.ResponseWriter, r *http.Request) {
 	responseHandler := corehttpresponse.New(log, rw)
 
 	var request refreshTokensRequest
-	if err := corehttprequest.DecodeAndValidate(r, &request); err != nil {
-		responseHandler.ErrorResponse(err, "failed to decode and validate refresh tokens HTTP request")
+	if err := corehttprequest.Decode(r, &request); err != nil {
+		responseHandler.ErrorResponse(err, "failed to decode HTTP request")
 
 		return
 	}

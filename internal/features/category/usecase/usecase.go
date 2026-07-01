@@ -20,7 +20,7 @@ type repo interface {
 
 	GetByID(
 		ctx context.Context,
-		id int,
+		id int64,
 	) (categoryentity.Category, error)
 
 	Patch(
@@ -30,7 +30,7 @@ type repo interface {
 
 	DeleteByID(
 		ctx context.Context,
-		id int,
+		id int64,
 	) error
 }
 

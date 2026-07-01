@@ -10,7 +10,7 @@ import (
 
 func (uc *UseCase) GetUserByID(
 	ctx context.Context,
-	id int,
+	id int64,
 ) (userentity.User, error) {
 	if id <= 0 {
 		return userentity.User{}, fmt.Errorf(

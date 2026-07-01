@@ -11,7 +11,7 @@ import (
 func (uc *UseCase) List(
 	ctx context.Context,
 	dto ListDTO,
-) (int, []advertentity.Advert, error) {
+) (int64, []advertentity.Advert, error) {
 	if dto.Limit != nil && *dto.Limit < 0 {
 		return 0, nil, fmt.Errorf(
 			"'Limit' must be non negative: %w",
@@ -44,7 +44,7 @@ func (uc *UseCase) List(
 		return 0, nil, fmt.Errorf("count adverts: %w", err)
 	}
 
-	ids := make([]int, len(adverts))
+	ids := make([]int64, len(adverts))
 	for i, a := range adverts {
 		ids[i] = a.ID
 	}

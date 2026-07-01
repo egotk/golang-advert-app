@@ -10,7 +10,7 @@ import (
 
 func (r *Repo) DeleteByID(
 	ctx context.Context,
-	id int,
+	id int64,
 ) error {
 	ctx, cancel := context.WithTimeout(ctx, r.pool.OpTimeout())
 	defer cancel()

@@ -19,8 +19,8 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-func (c Claims) UserID() (int, error) {
-	userID, err := strconv.Atoi(c.Subject)
+func (c Claims) UserID() (int64, error) {
+	userID, err := strconv.ParseInt(c.Subject, 10, 64)
 	if err != nil {
 		return 0, fmt.Errorf("invalid 'sub': %s: %w", c.Subject, coreerrors.ErrInvalidArgument)
 	}
@@ -41,7 +41,7 @@ func ClaimsFromContext(ctx context.Context) (Claims, error) {
 	return claims, nil
 }
 
-func UserInfoFromContext(ctx context.Context) (int, string, error) {
+func UserInfoFromContext(ctx context.Context) (int64, string, error) {
 	claims, err := ClaimsFromContext(ctx)
 	if err != nil {
 		return 0, "", fmt.Errorf("failed to get 'Claims' from JWT: %w", err)

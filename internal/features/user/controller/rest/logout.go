@@ -11,10 +11,10 @@ import (
 )
 
 type logoutRequest struct {
-	RefreshToken string `json:"refresh_token" validate:"required,min=1,max=512"`
+	RefreshToken string `json:"refresh_token"`
 }
 
-func (r logoutRequest) toDTO(userID int) userusecase.LogoutDTO {
+func (r logoutRequest) toDTO(userID int64) userusecase.LogoutDTO {
 	return userusecase.LogoutDTO{
 		UserID:       userID,
 		RefreshToken: r.RefreshToken,
@@ -27,8 +27,8 @@ func (c *Controller) logout(rw http.ResponseWriter, r *http.Request) {
 	responseHandler := corehttpresponse.New(log, rw)
 
 	var request logoutRequest
-	if err := corehttprequest.DecodeAndValidate(r, &request); err != nil {
-		responseHandler.ErrorResponse(err, "failed to decode and validate logout request")
+	if err := corehttprequest.Decode(r, &request); err != nil {
+		responseHandler.ErrorResponse(err, "failed to decode HTTP request")
 
 		return
 	}

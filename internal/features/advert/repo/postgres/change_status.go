@@ -10,7 +10,7 @@ import (
 
 func (r *Repo) ChangeStatus(
 	ctx context.Context,
-	id int,
+	id int64,
 	oldStatus advertentity.Status,
 	newStatus advertentity.Status,
 ) (advertentity.Advert, error) {

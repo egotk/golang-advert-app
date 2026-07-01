@@ -10,7 +10,7 @@ import (
 
 func (r *Repo) ListImagesByAdvertID(
 	ctx context.Context,
-	advertID int,
+	advertID int64,
 ) ([]advertentity.AdvertImage, error) {
 	ctx, cancel := context.WithTimeout(ctx, r.pool.OpTimeout())
 	defer cancel()

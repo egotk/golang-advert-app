@@ -13,11 +13,11 @@ import (
 )
 
 type patchRequest struct {
-	ParentID nullable.Nullable[int] `json:"parent_id"`
-	Name     *string                `json:"name"`
+	ParentID nullable.Nullable[int64] `json:"parent_id"`
+	Name     *string                  `json:"name"`
 }
 
-func (r patchRequest) toDTO(id int) categoryusecase.PatchDTO {
+func (r patchRequest) toDTO(id int64) categoryusecase.PatchDTO {
 	return categoryusecase.PatchDTO{
 		ID:       id,
 		ParentID: r.ParentID,
@@ -49,7 +49,7 @@ func (c *Controller) patch(rw http.ResponseWriter, r *http.Request) {
 	responseHandler := corehttpresponse.New(log, rw)
 
 	var request patchRequest
-	if err := corehttprequest.DecodeAndValidate(r, &request); err != nil {
+	if err := corehttprequest.Decode(r, &request); err != nil {
 		responseHandler.ErrorResponse(err, "failed to decode and validate patch category HTTP request")
 
 		return

@@ -10,7 +10,7 @@ import (
 
 func (r *Repo) GetByID(
 	ctx context.Context,
-	id int,
+	id int64,
 ) (categoryentity.Category, error) {
 	ctx, cancel := context.WithTimeout(ctx, r.pool.OpTimeout())
 	defer cancel()

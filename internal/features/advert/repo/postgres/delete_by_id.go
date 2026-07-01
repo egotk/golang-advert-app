@@ -8,7 +8,7 @@ import (
 	corepostgres "github.com/egotk/golang-advert-app/internal/core/postgres"
 )
 
-func (r *Repo) DeleteByID(ctx context.Context, id int) error {
+func (r *Repo) DeleteByID(ctx context.Context, id int64) error {
 	ctx, cancel := context.WithTimeout(ctx, r.pool.OpTimeout())
 	defer cancel()
 

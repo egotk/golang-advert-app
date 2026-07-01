@@ -52,14 +52,14 @@ func (s *Service) generateRefresh() (RefreshToken, error) {
 
 func (s *Service) GenerateAccess(
 	role string,
-	userId int,
+	userId int64,
 ) (string, error) {
 	now := time.Now()
 
 	claims := Claims{
 		Role: role,
 		RegisteredClaims: jwt.RegisteredClaims{
-			Subject:   strconv.Itoa(userId),
+			Subject:   strconv.FormatInt(userId, 10),
 			IssuedAt:  jwt.NewNumericDate(now),
 			ExpiresAt: jwt.NewNumericDate(now.Add(s.accessTTL)),
 		},
@@ -77,7 +77,7 @@ func (s *Service) GenerateAccess(
 
 func (s *Service) IssuePair(
 	role string,
-	userId int,
+	userId int64,
 ) (Pair, error) {
 	refresh, err := s.generateRefresh()
 	if err != nil {

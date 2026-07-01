@@ -18,12 +18,12 @@ const (
 )
 
 type Filter struct {
-	UserID      *int
+	UserID      *int64
 	Title       *string
 	Description *string
-	MinPrice    *int
-	MaxPrice    *int
-	CategoryID  *int
+	MinPrice    *int64
+	MaxPrice    *int64
+	CategoryID  *int64
 	Status      *Status
 	FromDate    *time.Time
 	ToDate      *time.Time

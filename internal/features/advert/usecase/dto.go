@@ -6,72 +6,72 @@ import (
 )
 
 type CreateDTO struct {
-	UserID      int
+	UserID      int64
 	Title       string
 	Description string
-	Price       int
-	CategoryID  int
+	Price       int64
+	CategoryID  int64
 	Images      []imageentity.Image
 }
 
 type PatchDTO struct {
-	UserID      int
+	UserID      int64
 	UserRole    string
-	ID          int
-	Version     int
+	ID          int64
+	Version     int64
 	Title       *string
 	Description *string
-	Price       *int
-	CategoryID  *int
+	Price       *int64
+	CategoryID  *int64
 }
 
 type DeleteDTO struct {
-	UserID   int
+	UserID   int64
 	UserRole string
-	AdvertID int
+	AdvertID int64
 }
 
 type ArchiveDTO struct {
-	UserID   int
+	UserID   int64
 	UserRole string
-	AdvertID int
+	AdvertID int64
 }
 
 type GetByIDDTO struct {
-	UserID   int
+	UserID   int64
 	UserRole string
-	AdvertID int
+	AdvertID int64
 }
 
 type CountDTO struct {
-	UserID   int
+	UserID   int64
 	UserRole string
 	Filter   advertentity.Filter
 }
 
 type ListDTO struct {
-	UserID   int
+	UserID   int64
 	UserRole string
-	Limit    *int
-	Offset   *int
+	Limit    *int64
+	Offset   *int64
 	Filter   advertentity.Filter
 }
 
 type CreateImagesDTO struct {
-	UserID   int
+	UserID   int64
 	UserRole string
-	AdvertID int
+	AdvertID int64
 	Images   []imageentity.Image
 }
 
 type GetImageDTO struct {
-	UserID   int
+	UserID   int64
 	UserRole string
-	ImageID  int
+	ImageID  int64
 }
 
 type DeleteImageDTO struct {
-	UserID   int
+	UserID   int64
 	UserRole string
-	ImageID  int
+	ImageID  int64
 }

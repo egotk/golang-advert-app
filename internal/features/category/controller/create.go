@@ -10,7 +10,7 @@ import (
 )
 
 type createRequest struct {
-	ParentID *int   `json:"parent_id" validate:"omitempty,gte=1"`
+	ParentID *int64 `json:"parent_id" validate:"omitempty,gte=1"`
 	Name     string `json:"name" validate:"required,min=1,max=100"`
 }
 
@@ -27,7 +27,7 @@ func (c *Controller) create(rw http.ResponseWriter, r *http.Request) {
 	responseHandler := corehttpresponse.New(log, rw)
 
 	var request createRequest
-	if err := corehttprequest.DecodeAndValidate(r, &request); err != nil {
+	if err := corehttprequest.Decode(r, &request); err != nil {
 		responseHandler.ErrorResponse(err, "failed to decode and validate create category HTTP request")
 
 		return

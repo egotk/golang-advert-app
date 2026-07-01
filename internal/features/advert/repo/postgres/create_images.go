@@ -10,7 +10,7 @@ import (
 
 func (r *Repo) CreateImages(
 	ctx context.Context,
-	advertID int,
+	advertID int64,
 	images []advertentity.AdvertImage,
 ) error {
 	ctx, cancel := context.WithTimeout(ctx, r.pool.OpTimeout())
