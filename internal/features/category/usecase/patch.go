@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	coreerrors "github.com/egotk/golang-advert-app/internal/core/errors"
+	corevalidator "github.com/egotk/golang-advert-app/internal/core/validator"
 	categoryentity "github.com/egotk/golang-advert-app/internal/features/category/entity"
 )
 
@@ -12,6 +13,15 @@ func (uc *UseCase) Patch(
 	ctx context.Context,
 	dto PatchDTO,
 ) (categoryentity.Category, error) {
+	validator := corevalidator.Instance()
+	if err := validator.Struct(dto); err != nil {
+		return categoryentity.Category{}, fmt.Errorf("validate DTO: %v: %w", err, coreerrors.ErrInvalidArgument)
+	}
+
+	if dto.ParentID.Value != nil && *dto.ParentID.Value < 1 {
+		return categoryentity.Category{}, fmt.Errorf("'ParentID' must be positive: %w", coreerrors.ErrInvalidArgument)
+	}
+
 	if !dto.ParentID.Set && dto.Name == nil {
 		return categoryentity.Category{}, fmt.Errorf(
 			"empty patch request: %w",

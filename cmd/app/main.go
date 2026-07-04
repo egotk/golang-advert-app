@@ -21,7 +21,8 @@ import (
 	advertlocal "github.com/egotk/golang-advert-app/internal/features/advert/repo/local"
 	advertpostgres "github.com/egotk/golang-advert-app/internal/features/advert/repo/postgres"
 	advertusecase "github.com/egotk/golang-advert-app/internal/features/advert/usecase"
-	categoryhttp "github.com/egotk/golang-advert-app/internal/features/category/controller"
+	categorygrpc "github.com/egotk/golang-advert-app/internal/features/category/controller/grpc"
+	categoryhttp "github.com/egotk/golang-advert-app/internal/features/category/controller/rest"
 	categorypostgres "github.com/egotk/golang-advert-app/internal/features/category/repo/postgres"
 	categoryusecase "github.com/egotk/golang-advert-app/internal/features/category/usecase"
 	usergrpc "github.com/egotk/golang-advert-app/internal/features/user/controller/grpc"
@@ -30,6 +31,7 @@ import (
 	userpostgres "github.com/egotk/golang-advert-app/internal/features/user/repo/postgres"
 	userusecase "github.com/egotk/golang-advert-app/internal/features/user/usecase"
 	advertpb "github.com/egotk/golang-advert-app/internal/gen/advert"
+	categorypb "github.com/egotk/golang-advert-app/internal/gen/category"
 	userpb "github.com/egotk/golang-advert-app/internal/gen/user"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
@@ -90,11 +92,19 @@ func main() {
 			advertpb.Advert_Archive_FullMethodName,
 			advertpb.Advert_Delete_FullMethodName,
 			advertpb.Advert_DeleteImage_FullMethodName,
+
+			categorypb.Category_Create_FullMethodName,
+			categorypb.Category_Patch_FullMethodName,
+			categorypb.Category_Delete_FullMethodName,
 		),
 		coregrpc.Role(
 			map[string][]string{
 				advertpb.Advert_Approve_FullMethodName: {roles.Admin},
 				advertpb.Advert_Reject_FullMethodName:  {roles.Admin},
+
+				categorypb.Category_Create_FullMethodName: {roles.Admin},
+				categorypb.Category_Patch_FullMethodName:  {roles.Admin},
+				categorypb.Category_Delete_FullMethodName: {roles.Admin},
 			},
 		),
 	}
@@ -157,6 +167,9 @@ func main() {
 	categoryUseCase := categoryusecase.New(categoryRepo)
 	categoryHTTPController := categoryhttp.New(categoryUseCase)
 	apiVersionRouter.RegisterRoutes(categoryHTTPController.Routes(jwtService)...)
+
+	categoryGRPCController := categorygrpc.New(categoryUseCase)
+	categorypb.RegisterCategoryServer(grpcRegistrar, categoryGRPCController)
 
 	httpServer.RegisterAPIRouters(apiVersionRouter)
 

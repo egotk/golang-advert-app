@@ -10,8 +10,8 @@ import (
 )
 
 type createRequest struct {
-	ParentID *int64 `json:"parent_id" validate:"omitempty,gte=1"`
-	Name     string `json:"name" validate:"required,min=1,max=100"`
+	ParentID *int64 `json:"parent_id"`
+	Name     string `json:"name"`
 }
 
 func (r createRequest) toDTO() categoryusecase.CreateDTO {
@@ -28,7 +28,7 @@ func (c *Controller) create(rw http.ResponseWriter, r *http.Request) {
 
 	var request createRequest
 	if err := corehttprequest.Decode(r, &request); err != nil {
-		responseHandler.ErrorResponse(err, "failed to decode and validate create category HTTP request")
+		responseHandler.ErrorResponse(err, "failed to decode HTTP request")
 
 		return
 	}

@@ -14,10 +14,7 @@ func (c *Controller) list(rw http.ResponseWriter, r *http.Request) {
 
 	categories, err := c.useCase.List(ctx)
 	if err != nil {
-		responseHandler.ErrorResponse(
-			err,
-			"failed to get categories",
-		)
+		responseHandler.ErrorResponse(err, "failed to get categories")
 
 		return
 	}

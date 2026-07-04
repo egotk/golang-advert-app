@@ -15,22 +15,10 @@ type Controller struct {
 }
 
 type useCase interface {
-	Create(
-		ctx context.Context,
-		dto categoryusecase.CreateDTO,
-	) (categoryentity.Category, error)
-
+	Create(ctx context.Context, dto categoryusecase.CreateDTO) (categoryentity.Category, error)
 	List(ctx context.Context) ([]categoryentity.Category, error)
-
-	Patch(
-		ctx context.Context,
-		dto categoryusecase.PatchDTO,
-	) (categoryentity.Category, error)
-
-	Delete(
-		ctx context.Context,
-		id int64,
-	) error
+	Patch(ctx context.Context, dto categoryusecase.PatchDTO) (categoryentity.Category, error)
+	Delete(ctx context.Context, id int64) error
 }
 
 func New(useCase useCase) *Controller {
@@ -54,7 +42,6 @@ func (c *Controller) Routes(jwtService corehttp.JWTService) []corehttp.Route {
 			http.MethodGet,
 			"/adverts/categories",
 			c.list,
-			jwt,
 		),
 		corehttp.NewRoute(
 			http.MethodPatch,

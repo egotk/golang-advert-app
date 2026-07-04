@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package category;
+
+option go_package = "github.com/egotk/golang-advert-app/internal/gen/category;categorypb";
+
+import "google/protobuf/empty.proto";
+
+service Category {
+    rpc Create(CreateRequest) returns (CategoryResponse);
+    rpc List(google.protobuf.Empty) returns (CategoriesResponse);
+    rpc Patch(PatchRequest) returns (CategoryResponse);
+    rpc Delete(DeleteRequest) returns (google.protobuf.Empty);
+}
+
+message CategoryResponse {
+    int64 id = 1;
+    optional int64 parent_id = 2;
+    string name = 3;
+}
+
+message CategoriesResponse {
+    repeated CategoryResponse categories = 1;
+}
+
+message CreateRequest {
+    optional int64 parent_id = 1;
+    string name = 2;
+}
+
+message PatchRequest {
+    int64 id = 1;
+    optional string name = 2;
+    
+    oneof parent_id_opt {
+        int64 parent_id = 3;
+        google.protobuf.Empty should_clear = 4;
+    }
+}
+
+message DeleteRequest {
+    int64 id = 1;
+}
+
+
+

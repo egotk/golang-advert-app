@@ -1,10 +1,8 @@
 package categoryhttp
 
 import (
-	"fmt"
 	"net/http"
 
-	coreerrors "github.com/egotk/golang-advert-app/internal/core/errors"
 	corehttprequest "github.com/egotk/golang-advert-app/internal/core/http/request"
 	corehttpresponse "github.com/egotk/golang-advert-app/internal/core/http/response"
 	corezaplogger "github.com/egotk/golang-advert-app/internal/core/logger/zap"
@@ -25,24 +23,6 @@ func (r patchRequest) toDTO(id int64) categoryusecase.PatchDTO {
 	}
 }
 
-func (r patchRequest) Validate() error {
-	if r.ParentID.Set && r.ParentID.Value != nil {
-		if *r.ParentID.Value < 1 {
-			return fmt.Errorf("'ParentID' must be positive: %w", coreerrors.ErrInvalidArgument)
-		}
-	}
-
-	if r.Name != nil {
-		nameLen := len([]rune(*r.Name))
-
-		if nameLen < 1 || nameLen > 100 {
-			return fmt.Errorf("'Name' must be between 1 and 100 characters: %w", coreerrors.ErrInvalidArgument)
-		}
-	}
-
-	return nil
-}
-
 func (c *Controller) patch(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := corezaplogger.FromContext(ctx)
@@ -50,7 +30,7 @@ func (c *Controller) patch(rw http.ResponseWriter, r *http.Request) {
 
 	var request patchRequest
 	if err := corehttprequest.Decode(r, &request); err != nil {
-		responseHandler.ErrorResponse(err, "failed to decode and validate patch category HTTP request")
+		responseHandler.ErrorResponse(err, "failed to decode HTTP request")
 
 		return
 	}

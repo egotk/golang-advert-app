@@ -68,6 +68,14 @@ grpc-gen-user:
 	--go-grpc_opt=paths=source_relative \
 	user/user.proto
 
+grpc-gen-category:
+	@protoc -I internal/protos \
+	--go_out=internal/gen \
+	--go_opt=paths=source_relative \
+	--go-grpc_out=internal/gen \
+	--go-grpc_opt=paths=source_relative \
+	category/category.proto
+
 app-run:
 	@export LOGGER_FOLDER="${PROJECT_ROOT}/out/logs" && \
 	export POSTGRES_HOST=localhost && \
