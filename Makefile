@@ -52,6 +52,22 @@ migrate-action:
 		-database postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@advertapp-postgres:5432/${POSTGRES_DB}?sslmode=disable \
 		"$(action)"
 
+grpc-gen-advert:
+	@protoc -I internal/protos \
+	--go_out=internal/gen \
+	--go_opt=paths=source_relative \
+	--go-grpc_out=internal/gen \
+	--go-grpc_opt=paths=source_relative \
+	advert/advert.proto
+
+grpc-gen-user:
+	@protoc -I internal/protos \
+	--go_out=internal/gen \
+	--go_opt=paths=source_relative \
+	--go-grpc_out=internal/gen \
+	--go-grpc_opt=paths=source_relative \
+	user/user.proto
+
 app-run:
 	@export LOGGER_FOLDER="${PROJECT_ROOT}/out/logs" && \
 	export POSTGRES_HOST=localhost && \

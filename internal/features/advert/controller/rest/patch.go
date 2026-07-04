@@ -11,11 +11,11 @@ import (
 )
 
 type patchRequest struct {
-	Version     int64   `json:"version" validate:"required,gt=0"`
-	Title       *string `json:"title" validate:"omitempty,min=1,max=100"`
-	Description *string `json:"description" validate:"omitempty,min=1,max=1500"`
-	Price       *int64  `json:"price" validate:"omitempty,gte=0"`
-	CategoryID  *int64  `json:"category_id" validate:"omitempty,gt=0"`
+	Version     int64   `json:"version"`
+	Title       *string `json:"title"`
+	Description *string `json:"description"`
+	Price       *int64  `json:"price"`
+	CategoryID  *int64  `json:"category_id"`
 }
 
 func (r patchRequest) toDTO(advertID, userID int64, userRole string) advertusecase.PatchDTO {

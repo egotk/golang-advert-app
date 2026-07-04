@@ -21,11 +21,14 @@ type Server struct {
 func NewServer(
 	config Config,
 	log *corezaplogger.Logger,
-	interceptors ...grpc.UnaryServerInterceptor,
+	uInterceptors []grpc.UnaryServerInterceptor,
+	sInterceptors []grpc.StreamServerInterceptor,
 ) *Server {
+
 	return &Server{
 		Server: grpc.NewServer(
-			grpc.ChainUnaryInterceptor(interceptors...),
+			grpc.ChainUnaryInterceptor(uInterceptors...),
+			grpc.ChainStreamInterceptor(sInterceptors...),
 		),
 		config: config,
 		log:    log,

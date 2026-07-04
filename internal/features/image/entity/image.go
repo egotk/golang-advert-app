@@ -7,6 +7,8 @@ import (
 	coreerrors "github.com/egotk/golang-advert-app/internal/core/errors"
 )
 
+const MaxImageSize = 10 * 1024 * 1024
+
 type Image struct {
 	Name      string
 	Extension string

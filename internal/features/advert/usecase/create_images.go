@@ -7,6 +7,7 @@ import (
 	coreerrors "github.com/egotk/golang-advert-app/internal/core/errors"
 	corezaplogger "github.com/egotk/golang-advert-app/internal/core/logger/zap"
 	"github.com/egotk/golang-advert-app/internal/core/roles"
+	corevalidator "github.com/egotk/golang-advert-app/internal/core/validator"
 	advertentity "github.com/egotk/golang-advert-app/internal/features/advert/entity"
 	"go.uber.org/zap"
 )
@@ -32,6 +33,11 @@ func (uc *UseCase) CreateImages(
 			}
 		}
 	}()
+
+	validator := corevalidator.Instance()
+	if err := validator.Struct(dto); err != nil {
+		return nil, fmt.Errorf("validate DTO: %v: %w", err, coreerrors.ErrInvalidArgument)
+	}
 
 	if len(dto.Images) == 0 {
 		return nil, fmt.Errorf(

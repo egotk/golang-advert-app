@@ -1,0 +1,153 @@
+syntax = "proto3";
+
+package advert;
+
+option go_package = "github.com/egotk/golang-advert-app/internal/gen/advert;advertpb";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+service Advert {
+    rpc Create(CreateRequest) returns (AdvertResponse);
+    rpc GetByID(GetByIDRequest) returns (AdvertResponse);
+    rpc GetMyAdverts(GetMyAdvertsRequest) returns (AdvertsResponse);
+    rpc List(ListRequest) returns (AdvertsResponse);
+    rpc Patch(PatchRequest) returns (AdvertResponse);
+    rpc Approve(ApproveRequest) returns (AdvertResponse);
+    rpc Reject(RejectRequest) returns (AdvertResponse);
+    rpc Archive(ArchiveRequest) returns (AdvertResponse);
+    rpc Delete(DeleteRequest) returns (google.protobuf.Empty);
+    rpc Count(CountRequest) returns (CountResponse);
+    rpc CreateImages(stream CreateImagesRequest) returns (AdvertImagesResponse);
+    rpc GetImageByID(GetImageByIDRequest) returns (stream AdvertImageResponse);
+    rpc DeleteImage(DeleteImageRequest) returns (google.protobuf.Empty);
+}
+
+message AdvertResponse {
+    int64 id = 1;
+    int64 version = 2;
+    int64 user_id = 3;
+    string title = 4;
+    string description = 5;
+    int64 price = 6;
+    int64 category_id = 7;
+    string status = 8;
+    google.protobuf.Timestamp created_at = 9;
+    google.protobuf.Timestamp updated_at = 10;
+}
+
+message AdvertsResponse {
+    int64 count = 1;
+    repeated AdvertResponse adverts = 2;
+}
+
+message AdvertImageResponse {
+    oneof imgData {
+        AdvertImage image = 1;
+        bytes data = 2;
+    }
+}
+
+message AdvertImage {
+    int64 id = 1;
+    string name = 2;
+    int64 position = 3;
+    google.protobuf.Timestamp created_at = 4;
+}
+
+message AdvertImagesResponse {
+    int64 count = 1;
+    repeated AdvertImage images = 2;
+}
+
+message Filter {
+    optional int64 user_id = 1;
+    optional string title = 2;
+    optional string description = 3;
+    optional int64 min_price = 4;
+    optional int64 max_price = 5;
+    optional int64 category_id = 6;
+    optional string status = 7;
+    google.protobuf.Timestamp from_date = 8;
+    google.protobuf.Timestamp to_date = 9;
+    optional string sort = 10;
+    optional string order = 11;
+}
+
+message CreateRequest {
+    string title = 1;
+    string description = 2;
+    int64 price = 3;
+    int64 category_id = 4;
+}
+
+message GetByIDRequest {
+    int64 id = 1;
+}
+
+message GetMyAdvertsRequest {
+    optional int64 limit = 1;
+    optional int64 offset = 2;
+    optional Filter filter = 3;
+}
+
+message ListRequest {
+    optional int64 limit = 1;
+    optional int64 offset = 2;
+    optional Filter filter = 3;
+}
+
+message PatchRequest {
+    int64 id = 1;
+    int64 version = 2;
+    optional string title = 3;
+    optional string description = 4;
+    optional int64 price = 5;
+    optional int64 category_id = 6;
+}
+
+message ApproveRequest {
+    int64 id = 1;
+}
+
+message RejectRequest {
+    int64 id = 1;
+}
+
+message ArchiveRequest {
+    int64 id = 1;
+}
+
+message DeleteRequest {
+    int64 id = 1;
+}
+
+message CountRequest {
+    optional Filter filter = 1;
+}
+
+message CountResponse {
+    int64 count = 1;
+}
+
+message GetImageByIDRequest {
+    int64 id = 1;
+}
+
+message DeleteImageRequest {
+    int64 id = 1;
+}
+
+message CreateImagesRequest {
+    oneof img_data {
+        int64 advert_id = 1;
+        UploadImage image = 2;
+    }
+}
+
+message UploadImage {
+    string name = 1;
+    bytes data = 2;
+}
+
+

@@ -3,7 +3,6 @@ package usergrpc
 import (
 	"context"
 
-	corezaplogger "github.com/egotk/golang-advert-app/internal/core/logger/zap"
 	userentity "github.com/egotk/golang-advert-app/internal/features/user/entity"
 	userusecase "github.com/egotk/golang-advert-app/internal/features/user/usecase"
 	userpb "github.com/egotk/golang-advert-app/internal/gen/user"
@@ -12,8 +11,6 @@ import (
 type Controller struct {
 	userpb.UnimplementedUserServer
 	useCase useCase
-
-	log *corezaplogger.Logger
 }
 
 type useCase interface {
@@ -28,10 +25,8 @@ type useCase interface {
 
 func New(
 	useCase useCase,
-	log *corezaplogger.Logger,
 ) *Controller {
 	return &Controller{
 		useCase: useCase,
-		log:     log,
 	}
 }

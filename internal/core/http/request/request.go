@@ -19,25 +19,6 @@ func Decode(r *http.Request, dest any) error {
 		)
 	}
 
-	// var err error
-
-	// value, ok := dest.(validatable)
-	// if ok {
-	// 	err = value.Validate()
-	// } else {
-	// 	validator := corevalidator.Instance()
-
-	// 	err = validator.Struct(dest)
-	// }
-
-	// if err != nil {
-	// 	return fmt.Errorf(
-	// 		"validate request: %v: %w",
-	// 		err,
-	// 		coreerrors.ErrInvalidArgument,
-	// 	)
-	// }
-
 	return nil
 }
 

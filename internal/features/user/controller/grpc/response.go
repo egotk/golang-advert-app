@@ -29,8 +29,8 @@ func userToResponse(u userentity.User) *userpb.UserResponse {
 func usersToResponse(users []userentity.User) *userpb.UsersResponse {
 	userResponses := make([]*userpb.UserResponse, len(users))
 
-	for i := range len(users) {
-		userResponses[i] = userToResponse(users[i])
+	for i, u := range users {
+		userResponses[i] = userToResponse(u)
 	}
 
 	return &userpb.UsersResponse{

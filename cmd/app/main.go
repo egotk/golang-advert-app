@@ -14,8 +14,10 @@ import (
 	corejwt "github.com/egotk/golang-advert-app/internal/core/jwt"
 	corezaplogger "github.com/egotk/golang-advert-app/internal/core/logger/zap"
 	corepgxpool "github.com/egotk/golang-advert-app/internal/core/postgres/pool/pgx"
+	"github.com/egotk/golang-advert-app/internal/core/roles"
 	corevalidator "github.com/egotk/golang-advert-app/internal/core/validator"
-	adverthttp "github.com/egotk/golang-advert-app/internal/features/advert/controller/http"
+	advertgrpc "github.com/egotk/golang-advert-app/internal/features/advert/controller/grpc"
+	adverthttp "github.com/egotk/golang-advert-app/internal/features/advert/controller/rest"
 	advertlocal "github.com/egotk/golang-advert-app/internal/features/advert/repo/local"
 	advertpostgres "github.com/egotk/golang-advert-app/internal/features/advert/repo/postgres"
 	advertusecase "github.com/egotk/golang-advert-app/internal/features/advert/usecase"
@@ -27,8 +29,10 @@ import (
 	userentity "github.com/egotk/golang-advert-app/internal/features/user/entity"
 	userpostgres "github.com/egotk/golang-advert-app/internal/features/user/repo/postgres"
 	userusecase "github.com/egotk/golang-advert-app/internal/features/user/usecase"
+	advertpb "github.com/egotk/golang-advert-app/internal/gen/advert"
 	userpb "github.com/egotk/golang-advert-app/internal/gen/user"
 	"go.uber.org/zap"
+	"google.golang.org/grpc"
 )
 
 func main() {
@@ -65,9 +69,7 @@ func main() {
 	)
 
 	logger.Debug("init gRPC server")
-	grpcServer := coregrpc.NewServer(
-		coregrpc.NewConfigMust(),
-		logger,
+	uInterceptors := []grpc.UnaryServerInterceptor{
 		coregrpc.RequestID(),
 		coregrpc.Logger(logger),
 		coregrpc.ErrorHandler(),
@@ -76,7 +78,43 @@ func main() {
 			userpb.User_List_FullMethodName,
 			userpb.User_GetByID_FullMethodName,
 			userpb.User_Logout_FullMethodName,
+
+			advertpb.Advert_Create_FullMethodName,
+			advertpb.Advert_GetByID_FullMethodName,
+			advertpb.Advert_List_FullMethodName,
+			advertpb.Advert_GetMyAdverts_FullMethodName,
+			advertpb.Advert_Count_FullMethodName,
+			advertpb.Advert_Patch_FullMethodName,
+			advertpb.Advert_Approve_FullMethodName,
+			advertpb.Advert_Reject_FullMethodName,
+			advertpb.Advert_Archive_FullMethodName,
+			advertpb.Advert_Delete_FullMethodName,
+			advertpb.Advert_DeleteImage_FullMethodName,
 		),
+		coregrpc.Role(
+			map[string][]string{
+				advertpb.Advert_Approve_FullMethodName: {roles.Admin},
+				advertpb.Advert_Reject_FullMethodName:  {roles.Admin},
+			},
+		),
+	}
+
+	sInterceptors := []grpc.StreamServerInterceptor{
+		coregrpc.RequestIDStream(),
+		coregrpc.LoggerStream(logger),
+		coregrpc.ErrorHandlerStream(),
+		coregrpc.JWTokenStream(
+			jwtService,
+			advertpb.Advert_CreateImages_FullMethodName,
+			advertpb.Advert_GetImageByID_FullMethodName,
+		),
+	}
+
+	grpcServer := coregrpc.NewServer(
+		coregrpc.NewConfigMust(),
+		logger,
+		uInterceptors,
+		sInterceptors,
 	)
 	grpcRegistrar := grpcServer.GetRegistrar()
 
@@ -101,7 +139,7 @@ func main() {
 	userHTTPController := userhttp.New(userUseCase)
 	apiVersionRouter.RegisterRoutes(userHTTPController.Routes(jwtService)...)
 
-	userGRPCController := usergrpc.New(userUseCase, logger)
+	userGRPCController := usergrpc.New(userUseCase)
 	userpb.RegisterUserServer(grpcRegistrar, userGRPCController)
 
 	logger.Debug("init feature: adverts")
@@ -110,6 +148,9 @@ func main() {
 	advertUseCase := advertusecase.New(advertRepo, advertStorage)
 	advertHTTPController := adverthttp.New(advertUseCase)
 	apiVersionRouter.RegisterRoutes(advertHTTPController.Routes(jwtService)...)
+
+	advertGRPCController := advertgrpc.New(advertUseCase)
+	advertpb.RegisterAdvertServer(grpcRegistrar, advertGRPCController)
 
 	logger.Debug("init feature: categories")
 	categoryRepo := categorypostgres.New(pool)

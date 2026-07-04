@@ -4,7 +4,9 @@ import (
 	"context"
 	"fmt"
 
+	coreerrors "github.com/egotk/golang-advert-app/internal/core/errors"
 	corezaplogger "github.com/egotk/golang-advert-app/internal/core/logger/zap"
+	corevalidator "github.com/egotk/golang-advert-app/internal/core/validator"
 	advertentity "github.com/egotk/golang-advert-app/internal/features/advert/entity"
 	"go.uber.org/zap"
 )
@@ -29,6 +31,11 @@ func (uc *UseCase) Create(
 			}
 		}
 	}()
+
+	validator := corevalidator.Instance()
+	if err := validator.Struct(dto); err != nil {
+		return advertentity.Advert{}, fmt.Errorf("validate DTO: %v: %w", err, coreerrors.ErrInvalidArgument)
+	}
 
 	advert := advertentity.NewInitial(
 		dto.UserID,

@@ -11,57 +11,92 @@ import (
 	corehttpresponse "github.com/egotk/golang-advert-app/internal/core/http/response"
 	corejwt "github.com/egotk/golang-advert-app/internal/core/jwt"
 	corezaplogger "github.com/egotk/golang-advert-app/internal/core/logger/zap"
-	corevalidator "github.com/egotk/golang-advert-app/internal/core/validator"
 	advertusecase "github.com/egotk/golang-advert-app/internal/features/advert/usecase"
 	imageentity "github.com/egotk/golang-advert-app/internal/features/image/entity"
 )
 
-type createImagesRequest struct {
-	AdvertID      int64 `validate:"required,gt=0"`
+type createRequest struct {
+	Title         string
+	Description   string
+	Price         int64
+	CategoryID    int64
 	ImagesHeaders []*multipart.FileHeader
 }
 
-// TODO: вынести общую с createRequest логику
-func createImagesRequestFromMultipart(r *http.Request) (createImagesRequest, error) {
+func (r createRequest) toDTO(
+	userID int64,
+	images []imageentity.Image,
+) advertusecase.CreateDTO {
+	return advertusecase.CreateDTO{
+		UserID:      userID,
+		Title:       r.Title,
+		Description: r.Description,
+		Price:       r.Price,
+		CategoryID:  r.CategoryID,
+		Images:      images,
+	}
+}
+
+// TODO: вынести общую с addImageRequest логику
+func createRequestFromMultipart(r *http.Request) (createRequest, error) {
 	const (
-		advertIDKey  = "advert_id"
-		imagesKey    = "images"
-		maxImageSize = 10 << 20
-		maxMemory    = 8 << 20
+		titleKey        = "title"
+		descriptionKey  = "description"
+		priceKey        = "price"
+		categoryIDKey   = "category_id"
+		imagesKey       = "images"
+		maxAdvertImages = 10
+		maxMemory       = 8 * 1024 * 1024
 	)
 
 	if err := r.ParseMultipartForm(maxMemory); err != nil {
-		return createImagesRequest{}, fmt.Errorf(
+		return createRequest{}, fmt.Errorf(
 			"bad multipart request: %v: %w",
 			err,
 			coreerrors.ErrInvalidArgument,
 		)
 	}
 
-	advertID, err := strconv.ParseInt(r.FormValue(advertIDKey), 10, 64)
+	title := r.FormValue(titleKey)
+
+	description := r.FormValue(descriptionKey)
+
+	price, err := strconv.ParseInt(r.FormValue(priceKey), 10, 64)
 	if err != nil {
-		return createImagesRequest{}, fmt.Errorf(
-			"get 'AdvertID' from multipart: %v: %w",
+		return createRequest{}, fmt.Errorf(
+			"get 'Price' from multipart: %v: %w",
 			err,
 			coreerrors.ErrInvalidArgument,
 		)
 	}
 
-	request := createImagesRequest{AdvertID: advertID}
-
-	if err := corevalidator.Instance().Struct(request); err != nil {
-		return createImagesRequest{}, fmt.Errorf(
-			"validate request: %v: %w",
+	categoryID, err := strconv.ParseInt(r.FormValue(categoryIDKey), 10, 64)
+	if err != nil {
+		return createRequest{}, fmt.Errorf(
+			"get 'CategoryID' from multipart: %v: %w",
 			err,
 			coreerrors.ErrInvalidArgument,
 		)
+	}
+
+	request := createRequest{
+		Title:       title,
+		Description: description,
+		Price:       price,
+		CategoryID:  categoryID,
 	}
 
 	headers := r.MultipartForm.File[imagesKey]
+	if len(headers) > maxAdvertImages {
+		return createRequest{}, fmt.Errorf(
+			"too many images: %w",
+			coreerrors.ErrInvalidArgument,
+		)
+	}
 
 	for _, h := range headers {
-		if h.Size > maxImageSize {
-			return createImagesRequest{}, fmt.Errorf(
+		if h.Size > imageentity.MaxImageSize {
+			return createRequest{}, fmt.Errorf(
 				"image is too big: %w",
 				coreerrors.ErrInvalidArgument,
 			)
@@ -73,23 +108,23 @@ func createImagesRequestFromMultipart(r *http.Request) (createImagesRequest, err
 	return request, nil
 }
 
-func (c *Controller) createImages(rw http.ResponseWriter, r *http.Request) {
+func (c *Controller) create(rw http.ResponseWriter, r *http.Request) {
 	const contentTypeSeekLen = 512
 
 	ctx := r.Context()
 	log := corezaplogger.FromContext(ctx)
 	responseHandler := corehttpresponse.New(log, rw)
 
-	request, err := createImagesRequestFromMultipart(r)
+	request, err := createRequestFromMultipart(r)
 	if err != nil {
-		responseHandler.ErrorResponse(err, "failed to decode and validate create images HTTP request")
+		responseHandler.ErrorResponse(err, "failed to decode and validate create advert HTTP request")
 
 		return
 	}
 
-	userID, userRole, err := corejwt.UserInfoFromContext(ctx)
+	userID, _, err := corejwt.UserInfoFromContext(ctx)
 	if err != nil {
-		responseHandler.ErrorResponse(err, "failed to get user info from JWT")
+		responseHandler.ErrorResponse(err, "failed to get 'UserInfo' from JWT")
 
 		return
 	}
@@ -147,24 +182,16 @@ func (c *Controller) createImages(rw http.ResponseWriter, r *http.Request) {
 		images = append(images, image)
 	}
 
-	dto := advertusecase.CreateImagesDTO{
-		UserID:   userID,
-		UserRole: userRole,
-		AdvertID: request.AdvertID,
-		Images:   images,
-	}
+	dto := request.toDTO(userID, images)
 
-	createdImages, err := c.useCase.CreateImages(ctx, dto)
+	advert, err := c.useCase.Create(ctx, dto)
 	if err != nil {
-		responseHandler.ErrorResponse(
-			err,
-			fmt.Sprintf("failed to add images to advert with id=%d", dto.AdvertID),
-		)
+		responseHandler.ErrorResponse(err, "failed to create advert")
 
 		return
 	}
 
-	response := imagesResponseFromEntities(createdImages)
+	response := advertResponseFromEntity(advert)
 
 	responseHandler.JSONResponse(response, http.StatusCreated)
 }

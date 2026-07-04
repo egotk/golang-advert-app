@@ -8,12 +8,12 @@ import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
 
 service User {
-    rpc Create (CreateRequest) returns (UserResponse);
-    rpc Login (LoginRequest) returns (LoginResponse);
-    rpc Logout (LogoutRequest) returns (google.protobuf.Empty);
-    rpc List (ListRequest) returns (UsersResponse);
-    rpc GetByID (GetByIDRequest) returns (UserResponse);
-    rpc RefreshTokens (RefreshTokensRequest) returns (RefreshTokensResponse);
+    rpc Create(CreateRequest) returns (UserResponse);
+    rpc Login(LoginRequest) returns (LoginResponse);
+    rpc Logout(LogoutRequest) returns (google.protobuf.Empty);
+    rpc List(ListRequest) returns (UsersResponse);
+    rpc GetByID(GetByIDRequest) returns (UserResponse);
+    rpc RefreshTokens(RefreshTokensRequest) returns (RefreshTokensResponse);
 }
 
 message UserResponse {

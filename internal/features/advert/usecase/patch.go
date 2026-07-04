@@ -7,6 +7,7 @@ import (
 
 	coreerrors "github.com/egotk/golang-advert-app/internal/core/errors"
 	"github.com/egotk/golang-advert-app/internal/core/roles"
+	corevalidator "github.com/egotk/golang-advert-app/internal/core/validator"
 	advertentity "github.com/egotk/golang-advert-app/internal/features/advert/entity"
 )
 
@@ -19,6 +20,11 @@ func (uc *UseCase) Patch(
 			"empty patch request: %w",
 			coreerrors.ErrInvalidArgument,
 		)
+	}
+
+	validator := corevalidator.Instance()
+	if err := validator.Struct(dto); err != nil {
+		return advertentity.Advert{}, fmt.Errorf("validate DTO: %v: %w", err, coreerrors.ErrInvalidArgument)
 	}
 
 	if dto.Title != nil && strings.TrimSpace(*dto.Title) == "" {
