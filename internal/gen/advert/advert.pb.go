@@ -1319,6 +1319,50 @@ func (x *UploadImage) GetData() []byte {
 	return nil
 }
 
+type AddToFavouritesRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AdvertId      int64                  `protobuf:"varint,1,opt,name=advert_id,json=advertId,proto3" json:"advert_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AddToFavouritesRequest) Reset() {
+	*x = AddToFavouritesRequest{}
+	mi := &file_advert_advert_proto_msgTypes[21]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AddToFavouritesRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AddToFavouritesRequest) ProtoMessage() {}
+
+func (x *AddToFavouritesRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_advert_advert_proto_msgTypes[21]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AddToFavouritesRequest.ProtoReflect.Descriptor instead.
+func (*AddToFavouritesRequest) Descriptor() ([]byte, []int) {
+	return file_advert_advert_proto_rawDescGZIP(), []int{21}
+}
+
+func (x *AddToFavouritesRequest) GetAdvertId() int64 {
+	if x != nil {
+		return x.AdvertId
+	}
+	return 0
+}
+
 var File_advert_advert_proto protoreflect.FileDescriptor
 
 const file_advert_advert_proto_rawDesc = "" +
@@ -1439,7 +1483,9 @@ const file_advert_advert_proto_rawDesc = "" +
 	"\bimg_data\"5\n" +
 	"\vUploadImage\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x12\n" +
-	"\x04data\x18\x02 \x01(\fR\x04data2\xa9\x06\n" +
+	"\x04data\x18\x02 \x01(\fR\x04data\"5\n" +
+	"\x16AddToFavouritesRequest\x12\x1b\n" +
+	"\tadvert_id\x18\x01 \x01(\x03R\badvertId2\xf4\a\n" +
 	"\x06Advert\x127\n" +
 	"\x06Create\x12\x15.advert.CreateRequest\x1a\x16.advert.AdvertResponse\x129\n" +
 	"\aGetByID\x12\x16.advert.GetByIDRequest\x1a\x16.advert.AdvertResponse\x12D\n" +
@@ -1453,7 +1499,10 @@ const file_advert_advert_proto_rawDesc = "" +
 	"\x05Count\x12\x14.advert.CountRequest\x1a\x15.advert.CountResponse\x12K\n" +
 	"\fCreateImages\x12\x1b.advert.CreateImagesRequest\x1a\x1c.advert.AdvertImagesResponse(\x01\x12J\n" +
 	"\fGetImageByID\x12\x1b.advert.GetImageByIDRequest\x1a\x1b.advert.AdvertImageResponse0\x01\x12A\n" +
-	"\vDeleteImage\x12\x1a.advert.DeleteImageRequest\x1a\x16.google.protobuf.EmptyBAZ?github.com/egotk/golang-advert-app/internal/gen/advert;advertpbb\x06proto3"
+	"\vDeleteImage\x12\x1a.advert.DeleteImageRequest\x1a\x16.google.protobuf.Empty\x12I\n" +
+	"\x0fAddToFavourites\x12\x1e.advert.AddToFavouritesRequest\x1a\x16.google.protobuf.Empty\x12>\n" +
+	"\x0fCountFavourites\x12\x14.advert.CountRequest\x1a\x15.advert.CountResponse\x12>\n" +
+	"\x0eListFavourites\x12\x13.advert.ListRequest\x1a\x17.advert.AdvertsResponseBAZ?github.com/egotk/golang-advert-app/internal/gen/advert;advertpbb\x06proto3"
 
 var (
 	file_advert_advert_proto_rawDescOnce sync.Once
@@ -1467,41 +1516,42 @@ func file_advert_advert_proto_rawDescGZIP() []byte {
 	return file_advert_advert_proto_rawDescData
 }
 
-var file_advert_advert_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
+var file_advert_advert_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
 var file_advert_advert_proto_goTypes = []any{
-	(*AdvertResponse)(nil),        // 0: advert.AdvertResponse
-	(*AdvertsResponse)(nil),       // 1: advert.AdvertsResponse
-	(*AdvertImageResponse)(nil),   // 2: advert.AdvertImageResponse
-	(*AdvertImage)(nil),           // 3: advert.AdvertImage
-	(*AdvertImagesResponse)(nil),  // 4: advert.AdvertImagesResponse
-	(*Filter)(nil),                // 5: advert.Filter
-	(*CreateRequest)(nil),         // 6: advert.CreateRequest
-	(*GetByIDRequest)(nil),        // 7: advert.GetByIDRequest
-	(*GetMyAdvertsRequest)(nil),   // 8: advert.GetMyAdvertsRequest
-	(*ListRequest)(nil),           // 9: advert.ListRequest
-	(*PatchRequest)(nil),          // 10: advert.PatchRequest
-	(*ApproveRequest)(nil),        // 11: advert.ApproveRequest
-	(*RejectRequest)(nil),         // 12: advert.RejectRequest
-	(*ArchiveRequest)(nil),        // 13: advert.ArchiveRequest
-	(*DeleteRequest)(nil),         // 14: advert.DeleteRequest
-	(*CountRequest)(nil),          // 15: advert.CountRequest
-	(*CountResponse)(nil),         // 16: advert.CountResponse
-	(*GetImageByIDRequest)(nil),   // 17: advert.GetImageByIDRequest
-	(*DeleteImageRequest)(nil),    // 18: advert.DeleteImageRequest
-	(*CreateImagesRequest)(nil),   // 19: advert.CreateImagesRequest
-	(*UploadImage)(nil),           // 20: advert.UploadImage
-	(*timestamppb.Timestamp)(nil), // 21: google.protobuf.Timestamp
-	(*emptypb.Empty)(nil),         // 22: google.protobuf.Empty
+	(*AdvertResponse)(nil),         // 0: advert.AdvertResponse
+	(*AdvertsResponse)(nil),        // 1: advert.AdvertsResponse
+	(*AdvertImageResponse)(nil),    // 2: advert.AdvertImageResponse
+	(*AdvertImage)(nil),            // 3: advert.AdvertImage
+	(*AdvertImagesResponse)(nil),   // 4: advert.AdvertImagesResponse
+	(*Filter)(nil),                 // 5: advert.Filter
+	(*CreateRequest)(nil),          // 6: advert.CreateRequest
+	(*GetByIDRequest)(nil),         // 7: advert.GetByIDRequest
+	(*GetMyAdvertsRequest)(nil),    // 8: advert.GetMyAdvertsRequest
+	(*ListRequest)(nil),            // 9: advert.ListRequest
+	(*PatchRequest)(nil),           // 10: advert.PatchRequest
+	(*ApproveRequest)(nil),         // 11: advert.ApproveRequest
+	(*RejectRequest)(nil),          // 12: advert.RejectRequest
+	(*ArchiveRequest)(nil),         // 13: advert.ArchiveRequest
+	(*DeleteRequest)(nil),          // 14: advert.DeleteRequest
+	(*CountRequest)(nil),           // 15: advert.CountRequest
+	(*CountResponse)(nil),          // 16: advert.CountResponse
+	(*GetImageByIDRequest)(nil),    // 17: advert.GetImageByIDRequest
+	(*DeleteImageRequest)(nil),     // 18: advert.DeleteImageRequest
+	(*CreateImagesRequest)(nil),    // 19: advert.CreateImagesRequest
+	(*UploadImage)(nil),            // 20: advert.UploadImage
+	(*AddToFavouritesRequest)(nil), // 21: advert.AddToFavouritesRequest
+	(*timestamppb.Timestamp)(nil),  // 22: google.protobuf.Timestamp
+	(*emptypb.Empty)(nil),          // 23: google.protobuf.Empty
 }
 var file_advert_advert_proto_depIdxs = []int32{
-	21, // 0: advert.AdvertResponse.created_at:type_name -> google.protobuf.Timestamp
-	21, // 1: advert.AdvertResponse.updated_at:type_name -> google.protobuf.Timestamp
+	22, // 0: advert.AdvertResponse.created_at:type_name -> google.protobuf.Timestamp
+	22, // 1: advert.AdvertResponse.updated_at:type_name -> google.protobuf.Timestamp
 	0,  // 2: advert.AdvertsResponse.adverts:type_name -> advert.AdvertResponse
 	3,  // 3: advert.AdvertImageResponse.image:type_name -> advert.AdvertImage
-	21, // 4: advert.AdvertImage.created_at:type_name -> google.protobuf.Timestamp
+	22, // 4: advert.AdvertImage.created_at:type_name -> google.protobuf.Timestamp
 	3,  // 5: advert.AdvertImagesResponse.images:type_name -> advert.AdvertImage
-	21, // 6: advert.Filter.from_date:type_name -> google.protobuf.Timestamp
-	21, // 7: advert.Filter.to_date:type_name -> google.protobuf.Timestamp
+	22, // 6: advert.Filter.from_date:type_name -> google.protobuf.Timestamp
+	22, // 7: advert.Filter.to_date:type_name -> google.protobuf.Timestamp
 	5,  // 8: advert.GetMyAdvertsRequest.filter:type_name -> advert.Filter
 	5,  // 9: advert.ListRequest.filter:type_name -> advert.Filter
 	5,  // 10: advert.CountRequest.filter:type_name -> advert.Filter
@@ -1519,21 +1569,27 @@ var file_advert_advert_proto_depIdxs = []int32{
 	19, // 22: advert.Advert.CreateImages:input_type -> advert.CreateImagesRequest
 	17, // 23: advert.Advert.GetImageByID:input_type -> advert.GetImageByIDRequest
 	18, // 24: advert.Advert.DeleteImage:input_type -> advert.DeleteImageRequest
-	0,  // 25: advert.Advert.Create:output_type -> advert.AdvertResponse
-	0,  // 26: advert.Advert.GetByID:output_type -> advert.AdvertResponse
-	1,  // 27: advert.Advert.GetMyAdverts:output_type -> advert.AdvertsResponse
-	1,  // 28: advert.Advert.List:output_type -> advert.AdvertsResponse
-	0,  // 29: advert.Advert.Patch:output_type -> advert.AdvertResponse
-	0,  // 30: advert.Advert.Approve:output_type -> advert.AdvertResponse
-	0,  // 31: advert.Advert.Reject:output_type -> advert.AdvertResponse
-	0,  // 32: advert.Advert.Archive:output_type -> advert.AdvertResponse
-	22, // 33: advert.Advert.Delete:output_type -> google.protobuf.Empty
-	16, // 34: advert.Advert.Count:output_type -> advert.CountResponse
-	4,  // 35: advert.Advert.CreateImages:output_type -> advert.AdvertImagesResponse
-	2,  // 36: advert.Advert.GetImageByID:output_type -> advert.AdvertImageResponse
-	22, // 37: advert.Advert.DeleteImage:output_type -> google.protobuf.Empty
-	25, // [25:38] is the sub-list for method output_type
-	12, // [12:25] is the sub-list for method input_type
+	21, // 25: advert.Advert.AddToFavourites:input_type -> advert.AddToFavouritesRequest
+	15, // 26: advert.Advert.CountFavourites:input_type -> advert.CountRequest
+	9,  // 27: advert.Advert.ListFavourites:input_type -> advert.ListRequest
+	0,  // 28: advert.Advert.Create:output_type -> advert.AdvertResponse
+	0,  // 29: advert.Advert.GetByID:output_type -> advert.AdvertResponse
+	1,  // 30: advert.Advert.GetMyAdverts:output_type -> advert.AdvertsResponse
+	1,  // 31: advert.Advert.List:output_type -> advert.AdvertsResponse
+	0,  // 32: advert.Advert.Patch:output_type -> advert.AdvertResponse
+	0,  // 33: advert.Advert.Approve:output_type -> advert.AdvertResponse
+	0,  // 34: advert.Advert.Reject:output_type -> advert.AdvertResponse
+	0,  // 35: advert.Advert.Archive:output_type -> advert.AdvertResponse
+	23, // 36: advert.Advert.Delete:output_type -> google.protobuf.Empty
+	16, // 37: advert.Advert.Count:output_type -> advert.CountResponse
+	4,  // 38: advert.Advert.CreateImages:output_type -> advert.AdvertImagesResponse
+	2,  // 39: advert.Advert.GetImageByID:output_type -> advert.AdvertImageResponse
+	23, // 40: advert.Advert.DeleteImage:output_type -> google.protobuf.Empty
+	23, // 41: advert.Advert.AddToFavourites:output_type -> google.protobuf.Empty
+	16, // 42: advert.Advert.CountFavourites:output_type -> advert.CountResponse
+	1,  // 43: advert.Advert.ListFavourites:output_type -> advert.AdvertsResponse
+	28, // [28:44] is the sub-list for method output_type
+	12, // [12:28] is the sub-list for method input_type
 	12, // [12:12] is the sub-list for extension type_name
 	12, // [12:12] is the sub-list for extension extendee
 	0,  // [0:12] is the sub-list for field type_name
@@ -1563,7 +1619,7 @@ func file_advert_advert_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_advert_advert_proto_rawDesc), len(file_advert_advert_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   21,
+			NumMessages:   22,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -28,6 +28,10 @@ type useCase interface {
 	CreateImages(ctx context.Context, dto advertusecase.CreateImagesDTO) (_ []advertentity.AdvertImage, err error)
 	GetImageByID(ctx context.Context, dto advertusecase.GetImageDTO) (io.ReadCloser, advertentity.AdvertImage, error)
 	DeleteImage(ctx context.Context, dto advertusecase.DeleteImageDTO) error
+
+	AddToFavourites(ctx context.Context, dto advertusecase.AddToFavouritesDTO) error
+	ListFavourites(ctx context.Context, dto advertusecase.ListDTO) (int64, []advertentity.Advert, error)
+	CountFavourites(ctx context.Context, dto advertusecase.CountDTO) (int64, error)
 }
 
 func New(

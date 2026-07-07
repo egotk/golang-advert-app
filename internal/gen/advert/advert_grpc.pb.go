@@ -20,19 +20,22 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Advert_Create_FullMethodName       = "/advert.Advert/Create"
-	Advert_GetByID_FullMethodName      = "/advert.Advert/GetByID"
-	Advert_GetMyAdverts_FullMethodName = "/advert.Advert/GetMyAdverts"
-	Advert_List_FullMethodName         = "/advert.Advert/List"
-	Advert_Patch_FullMethodName        = "/advert.Advert/Patch"
-	Advert_Approve_FullMethodName      = "/advert.Advert/Approve"
-	Advert_Reject_FullMethodName       = "/advert.Advert/Reject"
-	Advert_Archive_FullMethodName      = "/advert.Advert/Archive"
-	Advert_Delete_FullMethodName       = "/advert.Advert/Delete"
-	Advert_Count_FullMethodName        = "/advert.Advert/Count"
-	Advert_CreateImages_FullMethodName = "/advert.Advert/CreateImages"
-	Advert_GetImageByID_FullMethodName = "/advert.Advert/GetImageByID"
-	Advert_DeleteImage_FullMethodName  = "/advert.Advert/DeleteImage"
+	Advert_Create_FullMethodName          = "/advert.Advert/Create"
+	Advert_GetByID_FullMethodName         = "/advert.Advert/GetByID"
+	Advert_GetMyAdverts_FullMethodName    = "/advert.Advert/GetMyAdverts"
+	Advert_List_FullMethodName            = "/advert.Advert/List"
+	Advert_Patch_FullMethodName           = "/advert.Advert/Patch"
+	Advert_Approve_FullMethodName         = "/advert.Advert/Approve"
+	Advert_Reject_FullMethodName          = "/advert.Advert/Reject"
+	Advert_Archive_FullMethodName         = "/advert.Advert/Archive"
+	Advert_Delete_FullMethodName          = "/advert.Advert/Delete"
+	Advert_Count_FullMethodName           = "/advert.Advert/Count"
+	Advert_CreateImages_FullMethodName    = "/advert.Advert/CreateImages"
+	Advert_GetImageByID_FullMethodName    = "/advert.Advert/GetImageByID"
+	Advert_DeleteImage_FullMethodName     = "/advert.Advert/DeleteImage"
+	Advert_AddToFavourites_FullMethodName = "/advert.Advert/AddToFavourites"
+	Advert_CountFavourites_FullMethodName = "/advert.Advert/CountFavourites"
+	Advert_ListFavourites_FullMethodName  = "/advert.Advert/ListFavourites"
 )
 
 // AdvertClient is the client API for Advert service.
@@ -52,6 +55,9 @@ type AdvertClient interface {
 	CreateImages(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[CreateImagesRequest, AdvertImagesResponse], error)
 	GetImageByID(ctx context.Context, in *GetImageByIDRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[AdvertImageResponse], error)
 	DeleteImage(ctx context.Context, in *DeleteImageRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	AddToFavourites(ctx context.Context, in *AddToFavouritesRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	CountFavourites(ctx context.Context, in *CountRequest, opts ...grpc.CallOption) (*CountResponse, error)
+	ListFavourites(ctx context.Context, in *ListRequest, opts ...grpc.CallOption) (*AdvertsResponse, error)
 }
 
 type advertClient struct {
@@ -204,6 +210,36 @@ func (c *advertClient) DeleteImage(ctx context.Context, in *DeleteImageRequest, 
 	return out, nil
 }
 
+func (c *advertClient) AddToFavourites(ctx context.Context, in *AddToFavouritesRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Advert_AddToFavourites_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *advertClient) CountFavourites(ctx context.Context, in *CountRequest, opts ...grpc.CallOption) (*CountResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CountResponse)
+	err := c.cc.Invoke(ctx, Advert_CountFavourites_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *advertClient) ListFavourites(ctx context.Context, in *ListRequest, opts ...grpc.CallOption) (*AdvertsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AdvertsResponse)
+	err := c.cc.Invoke(ctx, Advert_ListFavourites_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AdvertServer is the server API for Advert service.
 // All implementations must embed UnimplementedAdvertServer
 // for forward compatibility.
@@ -221,6 +257,9 @@ type AdvertServer interface {
 	CreateImages(grpc.ClientStreamingServer[CreateImagesRequest, AdvertImagesResponse]) error
 	GetImageByID(*GetImageByIDRequest, grpc.ServerStreamingServer[AdvertImageResponse]) error
 	DeleteImage(context.Context, *DeleteImageRequest) (*emptypb.Empty, error)
+	AddToFavourites(context.Context, *AddToFavouritesRequest) (*emptypb.Empty, error)
+	CountFavourites(context.Context, *CountRequest) (*CountResponse, error)
+	ListFavourites(context.Context, *ListRequest) (*AdvertsResponse, error)
 	mustEmbedUnimplementedAdvertServer()
 }
 
@@ -269,6 +308,15 @@ func (UnimplementedAdvertServer) GetImageByID(*GetImageByIDRequest, grpc.ServerS
 }
 func (UnimplementedAdvertServer) DeleteImage(context.Context, *DeleteImageRequest) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteImage not implemented")
+}
+func (UnimplementedAdvertServer) AddToFavourites(context.Context, *AddToFavouritesRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method AddToFavourites not implemented")
+}
+func (UnimplementedAdvertServer) CountFavourites(context.Context, *CountRequest) (*CountResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CountFavourites not implemented")
+}
+func (UnimplementedAdvertServer) ListFavourites(context.Context, *ListRequest) (*AdvertsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListFavourites not implemented")
 }
 func (UnimplementedAdvertServer) mustEmbedUnimplementedAdvertServer() {}
 func (UnimplementedAdvertServer) testEmbeddedByValue()                {}
@@ -507,6 +555,60 @@ func _Advert_DeleteImage_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Advert_AddToFavourites_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddToFavouritesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdvertServer).AddToFavourites(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Advert_AddToFavourites_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdvertServer).AddToFavourites(ctx, req.(*AddToFavouritesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Advert_CountFavourites_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdvertServer).CountFavourites(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Advert_CountFavourites_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdvertServer).CountFavourites(ctx, req.(*CountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Advert_ListFavourites_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdvertServer).ListFavourites(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Advert_ListFavourites_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdvertServer).ListFavourites(ctx, req.(*ListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Advert_ServiceDesc is the grpc.ServiceDesc for Advert service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -557,6 +659,18 @@ var Advert_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteImage",
 			Handler:    _Advert_DeleteImage_Handler,
+		},
+		{
+			MethodName: "AddToFavourites",
+			Handler:    _Advert_AddToFavourites_Handler,
+		},
+		{
+			MethodName: "CountFavourites",
+			Handler:    _Advert_CountFavourites_Handler,
+		},
+		{
+			MethodName: "ListFavourites",
+			Handler:    _Advert_ListFavourites_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

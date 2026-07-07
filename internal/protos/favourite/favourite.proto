@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package fav;
+
+option go_package = "github.com/egotk/golang-advert-app/internal/gen/favorite;favpb";
+
+import "google/protobuf/empty.proto";
+
+service Favourite {
+    rpc ListIDs(google.protobuf.Empty) returns (ListIDsResponse);
+    rpc Remove(RemoveRequest) returns (google.protobuf.Empty);
+}
+
+message ListIDsResponse {
+    repeated int64 ids = 1;
+}
+
+message RemoveRequest {
+    int64 advert_id = 1;
+}

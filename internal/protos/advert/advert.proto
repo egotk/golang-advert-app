@@ -21,6 +21,10 @@ service Advert {
     rpc CreateImages(stream CreateImagesRequest) returns (AdvertImagesResponse);
     rpc GetImageByID(GetImageByIDRequest) returns (stream AdvertImageResponse);
     rpc DeleteImage(DeleteImageRequest) returns (google.protobuf.Empty);
+
+    rpc AddToFavourites(AddToFavouritesRequest) returns (google.protobuf.Empty);
+    rpc CountFavourites(CountRequest) returns (CountResponse);
+    rpc ListFavourites(ListRequest) returns (AdvertsResponse);
 }
 
 message AdvertResponse {
@@ -148,6 +152,10 @@ message CreateImagesRequest {
 message UploadImage {
     string name = 1;
     bytes data = 2;
+}
+
+message AddToFavouritesRequest {
+    int64 advert_id = 1;
 }
 
 

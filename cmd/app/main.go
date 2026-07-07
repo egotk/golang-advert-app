@@ -26,6 +26,7 @@ import (
 	categoryhttp "github.com/egotk/golang-advert-app/internal/features/category/controller/rest"
 	categorypostgres "github.com/egotk/golang-advert-app/internal/features/category/repo/postgres"
 	categoryusecase "github.com/egotk/golang-advert-app/internal/features/category/usecase"
+	favgrpc "github.com/egotk/golang-advert-app/internal/features/favourite/controller/grpc"
 	favrest "github.com/egotk/golang-advert-app/internal/features/favourite/controller/rest"
 	favpostgres "github.com/egotk/golang-advert-app/internal/features/favourite/repo/postgres"
 	favusecase "github.com/egotk/golang-advert-app/internal/features/favourite/usecase"
@@ -36,6 +37,7 @@ import (
 	userusecase "github.com/egotk/golang-advert-app/internal/features/user/usecase"
 	advertpb "github.com/egotk/golang-advert-app/internal/gen/advert"
 	categorypb "github.com/egotk/golang-advert-app/internal/gen/category"
+	favpb "github.com/egotk/golang-advert-app/internal/gen/favourite"
 	userpb "github.com/egotk/golang-advert-app/internal/gen/user"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
@@ -97,9 +99,16 @@ func main() {
 			advertpb.Advert_Delete_FullMethodName,
 			advertpb.Advert_DeleteImage_FullMethodName,
 
+			advertpb.Advert_AddToFavourites_FullMethodName,
+			advertpb.Advert_ListFavourites_FullMethodName,
+			advertpb.Advert_CountFavourites_FullMethodName,
+
 			categorypb.Category_Create_FullMethodName,
 			categorypb.Category_Patch_FullMethodName,
 			categorypb.Category_Delete_FullMethodName,
+
+			favpb.Favourite_ListIDs_FullMethodName,
+			favpb.Favourite_Remove_FullMethodName,
 		),
 		coregrpc.Role(
 			map[string][]string{
@@ -149,6 +158,9 @@ func main() {
 	favUseCase := favusecase.New(favRepo)
 	favHTTPController := favrest.New(favUseCase)
 	apiVersionRouter.RegisterRoutes(favHTTPController.Routes(jwtService)...)
+
+	favGRPCController := favgrpc.New(favUseCase)
+	favpb.RegisterFavouriteServer(grpcRegistrar, favGRPCController)
 
 	logger.Debug("init feature: users")
 	validations := userentity.Validations()
