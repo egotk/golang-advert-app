@@ -13,18 +13,19 @@ const (
 )
 
 type Advert struct {
-	ID          int64
-	Version     int64
-	UserID      int64
-	Title       string
-	Description string
-	Price       int64
-	CategoryID  int64
-	Status      Status
-	ViewsCount  int64
-	Images      []AdvertImage
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
+	ID             int64
+	Version        int64
+	UserID         int64
+	Title          string
+	Description    string
+	Price          int64
+	CategoryID     int64
+	Status         Status
+	ViewsCount     int64
+	Images         []AdvertImage
+	CreatedAt      time.Time
+	UpdatedAt      time.Time
+	FavouriteCount int64
 }
 
 func NewInitial(

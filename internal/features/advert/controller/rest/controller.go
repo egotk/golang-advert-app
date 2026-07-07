@@ -1,4 +1,4 @@
-package adverthttp
+package advertrest
 
 import (
 	"context"
@@ -29,9 +29,15 @@ type useCase interface {
 	CreateImages(ctx context.Context, dto advertusecase.CreateImagesDTO) (_ []advertentity.AdvertImage, err error)
 	GetImageByID(ctx context.Context, dto advertusecase.GetImageDTO) (io.ReadCloser, advertentity.AdvertImage, error)
 	DeleteImage(ctx context.Context, dto advertusecase.DeleteImageDTO) error
+
+	AddToFavourites(ctx context.Context, dto advertusecase.AddToFavouritesDTO) error
+	ListFavourites(ctx context.Context, dto advertusecase.ListDTO) (int64, []advertentity.Advert, error)
+	CountFavourites(ctx context.Context, dto advertusecase.CountDTO) (int64, error)
 }
 
-func New(useCase useCase) *Controller {
+func New(
+	useCase useCase,
+) *Controller {
 	return &Controller{
 		useCase: useCase,
 	}
@@ -119,6 +125,25 @@ func (c *Controller) Routes(jwtService corehttp.JWTService) []corehttp.Route {
 			http.MethodDelete,
 			"/adverts/images/{id}",
 			c.deleteImage,
+			jwt,
+		),
+
+		corehttp.NewRoute(
+			http.MethodPost,
+			"/adverts/favourites/{id}",
+			c.addToFavourites,
+			jwt,
+		),
+		corehttp.NewRoute(
+			http.MethodGet,
+			"/adverts/favourites",
+			c.listFavourites,
+			jwt,
+		),
+		corehttp.NewRoute(
+			http.MethodGet,
+			"/adverts/favourites/count",
+			c.countFavourites,
 			jwt,
 		),
 	}

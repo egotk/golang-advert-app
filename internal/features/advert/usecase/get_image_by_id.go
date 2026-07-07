@@ -10,10 +10,7 @@ import (
 	advertentity "github.com/egotk/golang-advert-app/internal/features/advert/entity"
 )
 
-func (uc *UseCase) GetImageByID(
-	ctx context.Context,
-	dto GetImageDTO,
-) (io.ReadCloser, advertentity.AdvertImage, error) {
+func (uc *UseCase) GetImageByID(ctx context.Context, dto GetImageDTO) (io.ReadCloser, advertentity.AdvertImage, error) {
 	advertID, advertImage, err := uc.repo.GetImageByID(ctx, dto.ImageID)
 	if err != nil {
 		return nil, advertentity.AdvertImage{},

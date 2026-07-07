@@ -1,4 +1,4 @@
-package adverthttp
+package advertrest
 
 import (
 	"net/http"
@@ -20,7 +20,7 @@ func (c *Controller) count(rw http.ResponseWriter, r *http.Request) {
 
 	filter, err := getListFilterQueryParams(r)
 	if err != nil {
-		responseHandler.ErrorResponse(err, "failed to get list filter query params")
+		responseHandler.ErrorResponse(err, "failed to get filter query params")
 
 		return
 	}

@@ -11,10 +11,7 @@ import (
 	advertentity "github.com/egotk/golang-advert-app/internal/features/advert/entity"
 )
 
-func (uc *UseCase) Patch(
-	ctx context.Context,
-	dto PatchDTO,
-) (advertentity.Advert, error) {
+func (uc *UseCase) Patch(ctx context.Context, dto PatchDTO) (advertentity.Advert, error) {
 	if dto.Title == nil && dto.Description == nil && dto.Price == nil && dto.CategoryID == nil {
 		return advertentity.Advert{}, fmt.Errorf(
 			"empty patch request: %w",

@@ -9,10 +9,7 @@ import (
 	advertentity "github.com/egotk/golang-advert-app/internal/features/advert/entity"
 )
 
-func (uc *UseCase) Archive(
-	ctx context.Context,
-	dto ArchiveDTO,
-) (advertentity.Advert, error) {
+func (uc *UseCase) Archive(ctx context.Context, dto ArchiveDTO) (advertentity.Advert, error) {
 	if dto.AdvertID <= 0 {
 		return advertentity.Advert{}, fmt.Errorf("'ID' must be positive: %w", coreerrors.ErrInvalidArgument)
 	}

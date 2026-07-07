@@ -9,10 +9,7 @@ import (
 	advertentity "github.com/egotk/golang-advert-app/internal/features/advert/entity"
 )
 
-func (r *Repo) Count(
-	ctx context.Context,
-	filter advertentity.Filter,
-) (int64, error) {
+func (r *Repo) Count(ctx context.Context, filter advertentity.Filter) (int64, error) {
 	ctx, cancel := context.WithTimeout(ctx, r.pool.OpTimeout())
 	defer cancel()
 
@@ -24,7 +21,7 @@ func (r *Repo) Count(
 	FROM advertapp.adverts
 	`)
 
-	conditions, args := buildFilterConditions(filter)
+	conditions, args := buildAdvertFilterConditions(filter, nil, []any{})
 
 	if len(conditions) > 0 {
 		queryBuilder.WriteString(" WHERE ")

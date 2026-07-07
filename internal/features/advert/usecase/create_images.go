@@ -12,10 +12,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func (uc *UseCase) CreateImages(
-	ctx context.Context,
-	dto CreateImagesDTO,
-) (_ []advertentity.AdvertImage, err error) {
+func (uc *UseCase) CreateImages(ctx context.Context, dto CreateImagesDTO) (_ []advertentity.AdvertImage, err error) {
 	const maxImagesLen = 10
 	var savedPaths []string
 	defer func() {

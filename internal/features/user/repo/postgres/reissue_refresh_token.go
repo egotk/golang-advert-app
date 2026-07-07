@@ -29,11 +29,11 @@ func (r *Repo) ReissueRefreshToken(
 	WHERE token_hash = $1 AND user_id = $2;
 	`
 
-	cmdTag, err := tx.Exec(ctx, deleteQuery, oldHash, userID)
+	tag, err := tx.Exec(ctx, deleteQuery, oldHash, userID)
 	if err != nil {
 		return fmt.Errorf("DELETE: %w", corepostgres.MapError(err))
 	}
-	if cmdTag.RowsAffected() == 0 {
+	if tag.RowsAffected() == 0 {
 		return userentity.ErrTokenNotFound
 	}
 

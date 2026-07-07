@@ -18,6 +18,7 @@ import (
 	corevalidator "github.com/egotk/golang-advert-app/internal/core/validator"
 	advertgrpc "github.com/egotk/golang-advert-app/internal/features/advert/controller/grpc"
 	adverthttp "github.com/egotk/golang-advert-app/internal/features/advert/controller/rest"
+	advertentity "github.com/egotk/golang-advert-app/internal/features/advert/entity"
 	advertlocal "github.com/egotk/golang-advert-app/internal/features/advert/repo/local"
 	advertpostgres "github.com/egotk/golang-advert-app/internal/features/advert/repo/postgres"
 	advertusecase "github.com/egotk/golang-advert-app/internal/features/advert/usecase"
@@ -25,6 +26,9 @@ import (
 	categoryhttp "github.com/egotk/golang-advert-app/internal/features/category/controller/rest"
 	categorypostgres "github.com/egotk/golang-advert-app/internal/features/category/repo/postgres"
 	categoryusecase "github.com/egotk/golang-advert-app/internal/features/category/usecase"
+	favrest "github.com/egotk/golang-advert-app/internal/features/favourite/controller/rest"
+	favpostgres "github.com/egotk/golang-advert-app/internal/features/favourite/repo/postgres"
+	favusecase "github.com/egotk/golang-advert-app/internal/features/favourite/usecase"
 	usergrpc "github.com/egotk/golang-advert-app/internal/features/user/controller/grpc"
 	userhttp "github.com/egotk/golang-advert-app/internal/features/user/controller/rest"
 	userentity "github.com/egotk/golang-advert-app/internal/features/user/entity"
@@ -140,8 +144,16 @@ func main() {
 
 	apiVersionRouter := corehttp.NewAPIVersionRouter(corehttp.ApiV1)
 
+	logger.Debug("init feature: favourites")
+	favRepo := favpostgres.New(pool)
+	favUseCase := favusecase.New(favRepo)
+	favHTTPController := favrest.New(favUseCase)
+	apiVersionRouter.RegisterRoutes(favHTTPController.Routes(jwtService)...)
+
 	logger.Debug("init feature: users")
-	if err := corevalidator.RegisterValidations(userentity.Validations()...); err != nil {
+	validations := userentity.Validations()
+	structValidations := advertentity.StructValidations()
+	if err := corevalidator.RegisterValidations(validations, structValidations); err != nil {
 		logger.Fatal("register user validations", zap.Error(err))
 	}
 	userRepo := userpostgres.New(pool)
@@ -155,7 +167,7 @@ func main() {
 	logger.Debug("init feature: adverts")
 	advertRepo := advertpostgres.New(pool)
 	advertStorage := advertlocal.New(config.Root)
-	advertUseCase := advertusecase.New(advertRepo, advertStorage)
+	advertUseCase := advertusecase.New(favRepo, advertRepo, advertStorage)
 	advertHTTPController := adverthttp.New(advertUseCase)
 	apiVersionRouter.RegisterRoutes(advertHTTPController.Routes(jwtService)...)
 

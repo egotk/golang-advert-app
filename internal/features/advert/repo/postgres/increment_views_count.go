@@ -8,10 +8,7 @@ import (
 	corepostgres "github.com/egotk/golang-advert-app/internal/core/postgres"
 )
 
-func (r *Repo) IncrementViewsCount(
-	ctx context.Context,
-	id int64,
-) error {
+func (r *Repo) IncrementViewsCount(ctx context.Context, id int64) error {
 	ctx, cancel := context.WithTimeout(ctx, r.pool.OpTimeout())
 	defer cancel()
 

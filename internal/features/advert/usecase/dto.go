@@ -52,8 +52,8 @@ type CountDTO struct {
 type ListDTO struct {
 	UserID   int64
 	UserRole string
-	Limit    *int64
-	Offset   *int64
+	Limit    *int64 `validate:"omitempty,gte=0"`
+	Offset   *int64 `validate:"omitempty,gte=0"`
 	Filter   advertentity.Filter
 }
 
@@ -74,4 +74,10 @@ type DeleteImageDTO struct {
 	UserID   int64
 	UserRole string
 	ImageID  int64
+}
+
+type AddToFavouritesDTO struct {
+	AdvertID int64 `validate:"gt=0"`
+	UserID   int64
+	UserRole string
 }

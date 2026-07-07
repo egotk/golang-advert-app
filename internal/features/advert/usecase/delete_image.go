@@ -10,10 +10,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func (uc *UseCase) DeleteImage(
-	ctx context.Context,
-	dto DeleteImageDTO,
-) error {
+func (uc *UseCase) DeleteImage(ctx context.Context, dto DeleteImageDTO) error {
 	if dto.ImageID <= 0 {
 		return fmt.Errorf("'ImageID' must be positive")
 	}

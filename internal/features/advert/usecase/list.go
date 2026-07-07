@@ -5,43 +5,28 @@ import (
 	"fmt"
 
 	coreerrors "github.com/egotk/golang-advert-app/internal/core/errors"
+	corevalidator "github.com/egotk/golang-advert-app/internal/core/validator"
 	advertentity "github.com/egotk/golang-advert-app/internal/features/advert/entity"
 )
 
-func (uc *UseCase) List(
-	ctx context.Context,
-	dto ListDTO,
-) (int64, []advertentity.Advert, error) {
-	if dto.Limit != nil && *dto.Limit < 0 {
-		return 0, nil, fmt.Errorf(
-			"'Limit' must be non negative: %w",
-			coreerrors.ErrInvalidArgument,
-		)
-	}
-
-	if dto.Offset != nil && *dto.Offset < 0 {
-		return 0, nil, fmt.Errorf(
-			"'Offset' must be non negative: %w",
-			coreerrors.ErrInvalidArgument,
-		)
-	}
-
-	if err := validateFilter(dto.Filter); err != nil {
-		return 0, nil, fmt.Errorf("validate filter: %w", err)
+func (uc *UseCase) List(ctx context.Context, dto ListDTO) (int64, []advertentity.Advert, error) {
+	validator := corevalidator.Instance()
+	if err := validator.Struct(dto); err != nil {
+		return 0, nil, fmt.Errorf("validate DTO: %v: %w", err, coreerrors.ErrInvalidArgument)
 	}
 
 	if err := applyFilterScope(dto.UserID, dto.UserRole, &dto.Filter); err != nil {
 		return 0, nil, fmt.Errorf("apply filter scope: %w", err)
 	}
 
-	adverts, err := uc.repo.List(ctx, dto.Limit, dto.Offset, dto.Filter)
-	if err != nil {
-		return 0, nil, fmt.Errorf("get adverts from repo: %w", err)
-	}
-
 	count, err := uc.repo.Count(ctx, dto.Filter)
 	if err != nil {
 		return 0, nil, fmt.Errorf("count adverts: %w", err)
+	}
+
+	adverts, err := uc.repo.List(ctx, dto.Limit, dto.Offset, dto.Filter)
+	if err != nil {
+		return 0, nil, fmt.Errorf("get adverts from repo: %w", err)
 	}
 
 	ids := make([]int64, len(adverts))

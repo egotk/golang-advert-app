@@ -10,10 +10,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func (uc *UseCase) Delete(
-	ctx context.Context,
-	dto DeleteDTO,
-) error {
+func (uc *UseCase) Delete(ctx context.Context, dto DeleteDTO) error {
 	log := corezaplogger.FromContext(ctx)
 
 	advert, err := uc.repo.GetByID(ctx, dto.AdvertID)

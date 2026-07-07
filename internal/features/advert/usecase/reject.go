@@ -8,10 +8,7 @@ import (
 	advertentity "github.com/egotk/golang-advert-app/internal/features/advert/entity"
 )
 
-func (uc *UseCase) Reject(
-	ctx context.Context,
-	id int64,
-) (advertentity.Advert, error) {
+func (uc *UseCase) Reject(ctx context.Context, id int64) (advertentity.Advert, error) {
 	if id <= 0 {
 		return advertentity.Advert{}, fmt.Errorf("'ID' must be positive: %w", coreerrors.ErrInvalidArgument)
 	}

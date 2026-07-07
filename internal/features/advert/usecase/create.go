@@ -11,10 +11,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func (uc *UseCase) Create(
-	ctx context.Context,
-	dto CreateDTO,
-) (_ advertentity.Advert, err error) {
+func (uc *UseCase) Create(ctx context.Context, dto CreateDTO) (_ advertentity.Advert, err error) {
 	var savedPaths []string
 	defer func() {
 		if err != nil {

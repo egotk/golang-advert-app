@@ -12,7 +12,11 @@ type queryRower interface {
 	QueryRow(ctx context.Context, sql string, args ...any) pgx.Row
 }
 
-func getNextImagePosition(ctx context.Context, rower queryRower, advertID int64) (int64, error) {
+func getNextImagePosition(
+	ctx context.Context,
+	rower queryRower,
+	advertID int64,
+) (int64, error) {
 	const posQuery = `
 	SELECT COALESCE(MAX(position), -1) + 1
 

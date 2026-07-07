@@ -1,4 +1,4 @@
-package adverthttp
+package advertrest
 
 import (
 	"fmt"

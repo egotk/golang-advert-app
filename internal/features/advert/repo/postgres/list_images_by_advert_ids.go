@@ -8,10 +8,7 @@ import (
 	advertentity "github.com/egotk/golang-advert-app/internal/features/advert/entity"
 )
 
-func (r *Repo) ListImagesByAdvertIDs(
-	ctx context.Context,
-	ids []int64,
-) (map[int64][]advertentity.AdvertImage, error) {
+func (r *Repo) ListImagesByAdvertIDs(ctx context.Context, ids []int64) (map[int64][]advertentity.AdvertImage, error) {
 	ctx, cancel := context.WithTimeout(ctx, r.pool.OpTimeout())
 	defer cancel()
 

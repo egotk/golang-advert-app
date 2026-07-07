@@ -3,14 +3,15 @@ package advertusecase
 import (
 	"context"
 	"fmt"
+
+	coreerrors "github.com/egotk/golang-advert-app/internal/core/errors"
+	corevalidator "github.com/egotk/golang-advert-app/internal/core/validator"
 )
 
-func (uc *UseCase) Count(
-	ctx context.Context,
-	dto CountDTO,
-) (int64, error) {
-	if err := validateFilter(dto.Filter); err != nil {
-		return 0, fmt.Errorf("validate filter: %w", err)
+func (uc *UseCase) Count(ctx context.Context, dto CountDTO) (int64, error) {
+	validator := corevalidator.Instance()
+	if err := validator.Struct(dto); err != nil {
+		return 0, fmt.Errorf("validate DTO: %v: %w", err, coreerrors.ErrInvalidArgument)
 	}
 
 	if err := applyFilterScope(dto.UserID, dto.UserRole, &dto.Filter); err != nil {

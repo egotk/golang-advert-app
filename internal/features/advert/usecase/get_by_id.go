@@ -9,10 +9,7 @@ import (
 	advertentity "github.com/egotk/golang-advert-app/internal/features/advert/entity"
 )
 
-func (uc *UseCase) GetByID(
-	ctx context.Context,
-	dto GetByIDDTO,
-) (advertentity.Advert, error) {
+func (uc *UseCase) GetByID(ctx context.Context, dto GetByIDDTO) (advertentity.Advert, error) {
 	if dto.AdvertID <= 0 {
 		return advertentity.Advert{}, fmt.Errorf("'ID' must be positive: %w", coreerrors.ErrInvalidArgument)
 	}
@@ -23,7 +20,7 @@ func (uc *UseCase) GetByID(
 	}
 
 	// запретить всем кроме владельца и админов просмотр объявлений со статусом != active
-	if advert.Status != advertentity.StatusActive && dto.UserID != advert.UserID {
+	if !advert.IsPublic() && dto.UserID != advert.UserID {
 		if dto.UserRole != roles.Admin {
 			return advertentity.Advert{}, fmt.Errorf("invalid role: %w", coreerrors.ErrForbidden)
 		}

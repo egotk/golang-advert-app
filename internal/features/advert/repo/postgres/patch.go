@@ -8,10 +8,7 @@ import (
 	advertentity "github.com/egotk/golang-advert-app/internal/features/advert/entity"
 )
 
-func (r *Repo) Patch(
-	ctx context.Context,
-	advert *advertentity.Advert,
-) error {
+func (r *Repo) Patch(ctx context.Context, advert *advertentity.Advert) error {
 	ctx, cancel := context.WithTimeout(ctx, r.pool.OpTimeout())
 	defer cancel()
 

@@ -27,14 +27,14 @@ func (r *Repo) List(
 	FROM advertapp.adverts
 	`)
 
-	conditions, args := buildFilterConditions(filter)
+	conditions, args := buildAdvertFilterConditions(filter, nil, []any{})
 
 	if len(conditions) > 0 {
 		queryBuilder.WriteString(" WHERE ")
 		queryBuilder.WriteString(strings.Join(conditions, " AND "))
 	}
 
-	queryBuilder.WriteString(orderBy(filter.Sort, filter.Order))
+	queryBuilder.WriteString(orderBy(filter.Sort, nil, filter.Order))
 
 	args = append(args, limit)
 	fmt.Fprintf(&queryBuilder, " LIMIT $%d", len(args))
@@ -76,32 +76,4 @@ func (r *Repo) List(
 	}
 
 	return adverts, nil
-}
-
-func orderBy(
-	sort *advertentity.Sort,
-	order *advertentity.Order,
-) string {
-	if sort == nil {
-		return " ORDER BY id ASC"
-	}
-
-	var column string
-	switch *sort {
-	case advertentity.SortByPrice:
-		column = "price"
-	case advertentity.SortByViews:
-		column = "views_count"
-	case advertentity.SortByDate:
-		column = "created_at"
-	default:
-		return " ORDER BY id ASC"
-	}
-
-	direction := "ASC"
-	if order != nil && *order == advertentity.OrderDesc {
-		direction = "DESC"
-	}
-
-	return fmt.Sprintf(" ORDER BY %s %s, id ASC", column, direction)
 }

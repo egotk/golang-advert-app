@@ -13,11 +13,23 @@ type Validation struct {
 	Fn  validator.Func
 }
 
-func RegisterValidations(validations ...Validation) error {
+type StructValidation struct {
+	Fn    validator.StructLevelFunc
+	Types []any
+}
+
+func RegisterValidations(
+	validations []Validation,
+	structValidations []StructValidation,
+) error {
 	for _, v := range validations {
 		if err := instance.RegisterValidation(v.Tag, v.Fn); err != nil {
 			return fmt.Errorf("register validation %s: %w", v.Tag, err)
 		}
+	}
+
+	for _, v := range structValidations {
+		instance.RegisterStructValidation(v.Fn, v.Types...)
 	}
 
 	return nil

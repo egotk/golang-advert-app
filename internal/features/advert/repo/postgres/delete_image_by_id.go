@@ -8,10 +8,7 @@ import (
 	corepostgres "github.com/egotk/golang-advert-app/internal/core/postgres"
 )
 
-func (r *Repo) DeleteImageByID(
-	ctx context.Context,
-	imageID int64,
-) error {
+func (r *Repo) DeleteImageByID(ctx context.Context, imageID int64) error {
 	ctx, cancel := context.WithTimeout(ctx, r.pool.OpTimeout())
 	defer cancel()
 
