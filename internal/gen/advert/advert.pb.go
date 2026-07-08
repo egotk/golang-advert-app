@@ -396,16 +396,15 @@ func (x *AdvertImagesResponse) GetImages() []*AdvertImage {
 type Filter struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        *int64                 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
-	Title         *string                `protobuf:"bytes,2,opt,name=title,proto3,oneof" json:"title,omitempty"`
-	Description   *string                `protobuf:"bytes,3,opt,name=description,proto3,oneof" json:"description,omitempty"`
-	MinPrice      *int64                 `protobuf:"varint,4,opt,name=min_price,json=minPrice,proto3,oneof" json:"min_price,omitempty"`
-	MaxPrice      *int64                 `protobuf:"varint,5,opt,name=max_price,json=maxPrice,proto3,oneof" json:"max_price,omitempty"`
-	CategoryId    *int64                 `protobuf:"varint,6,opt,name=category_id,json=categoryId,proto3,oneof" json:"category_id,omitempty"`
-	Status        *string                `protobuf:"bytes,7,opt,name=status,proto3,oneof" json:"status,omitempty"`
-	FromDate      *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=from_date,json=fromDate,proto3" json:"from_date,omitempty"`
-	ToDate        *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=to_date,json=toDate,proto3" json:"to_date,omitempty"`
-	Sort          *string                `protobuf:"bytes,10,opt,name=sort,proto3,oneof" json:"sort,omitempty"`
-	Order         *string                `protobuf:"bytes,11,opt,name=order,proto3,oneof" json:"order,omitempty"`
+	SearchQuery   *string                `protobuf:"bytes,2,opt,name=search_query,json=searchQuery,proto3,oneof" json:"search_query,omitempty"`
+	MinPrice      *int64                 `protobuf:"varint,3,opt,name=min_price,json=minPrice,proto3,oneof" json:"min_price,omitempty"`
+	MaxPrice      *int64                 `protobuf:"varint,4,opt,name=max_price,json=maxPrice,proto3,oneof" json:"max_price,omitempty"`
+	CategoryId    *int64                 `protobuf:"varint,5,opt,name=category_id,json=categoryId,proto3,oneof" json:"category_id,omitempty"`
+	Status        *string                `protobuf:"bytes,6,opt,name=status,proto3,oneof" json:"status,omitempty"`
+	FromDate      *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=from_date,json=fromDate,proto3" json:"from_date,omitempty"`
+	ToDate        *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=to_date,json=toDate,proto3" json:"to_date,omitempty"`
+	Sort          *string                `protobuf:"bytes,9,opt,name=sort,proto3,oneof" json:"sort,omitempty"`
+	Order         *string                `protobuf:"bytes,10,opt,name=order,proto3,oneof" json:"order,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -447,16 +446,9 @@ func (x *Filter) GetUserId() int64 {
 	return 0
 }
 
-func (x *Filter) GetTitle() string {
-	if x != nil && x.Title != nil {
-		return *x.Title
-	}
-	return ""
-}
-
-func (x *Filter) GetDescription() string {
-	if x != nil && x.Description != nil {
-		return *x.Description
+func (x *Filter) GetSearchQuery() string {
+	if x != nil && x.SearchQuery != nil {
+		return *x.SearchQuery
 	}
 	return ""
 }
@@ -1398,25 +1390,23 @@ const file_advert_advert_proto_rawDesc = "" +
 	"created_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"Y\n" +
 	"\x14AdvertImagesResponse\x12\x14\n" +
 	"\x05count\x18\x01 \x01(\x03R\x05count\x12+\n" +
-	"\x06images\x18\x02 \x03(\v2\x13.advert.AdvertImageR\x06images\"\x81\x04\n" +
+	"\x06images\x18\x02 \x03(\v2\x13.advert.AdvertImageR\x06images\"\xde\x03\n" +
 	"\x06Filter\x12\x1c\n" +
-	"\auser_id\x18\x01 \x01(\x03H\x00R\x06userId\x88\x01\x01\x12\x19\n" +
-	"\x05title\x18\x02 \x01(\tH\x01R\x05title\x88\x01\x01\x12%\n" +
-	"\vdescription\x18\x03 \x01(\tH\x02R\vdescription\x88\x01\x01\x12 \n" +
-	"\tmin_price\x18\x04 \x01(\x03H\x03R\bminPrice\x88\x01\x01\x12 \n" +
-	"\tmax_price\x18\x05 \x01(\x03H\x04R\bmaxPrice\x88\x01\x01\x12$\n" +
-	"\vcategory_id\x18\x06 \x01(\x03H\x05R\n" +
+	"\auser_id\x18\x01 \x01(\x03H\x00R\x06userId\x88\x01\x01\x12&\n" +
+	"\fsearch_query\x18\x02 \x01(\tH\x01R\vsearchQuery\x88\x01\x01\x12 \n" +
+	"\tmin_price\x18\x03 \x01(\x03H\x02R\bminPrice\x88\x01\x01\x12 \n" +
+	"\tmax_price\x18\x04 \x01(\x03H\x03R\bmaxPrice\x88\x01\x01\x12$\n" +
+	"\vcategory_id\x18\x05 \x01(\x03H\x04R\n" +
 	"categoryId\x88\x01\x01\x12\x1b\n" +
-	"\x06status\x18\a \x01(\tH\x06R\x06status\x88\x01\x01\x127\n" +
-	"\tfrom_date\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\bfromDate\x123\n" +
-	"\ato_date\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\x06toDate\x12\x17\n" +
-	"\x04sort\x18\n" +
-	" \x01(\tH\aR\x04sort\x88\x01\x01\x12\x19\n" +
-	"\x05order\x18\v \x01(\tH\bR\x05order\x88\x01\x01B\n" +
+	"\x06status\x18\x06 \x01(\tH\x05R\x06status\x88\x01\x01\x127\n" +
+	"\tfrom_date\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\bfromDate\x123\n" +
+	"\ato_date\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\x06toDate\x12\x17\n" +
+	"\x04sort\x18\t \x01(\tH\x06R\x04sort\x88\x01\x01\x12\x19\n" +
+	"\x05order\x18\n" +
+	" \x01(\tH\aR\x05order\x88\x01\x01B\n" +
 	"\n" +
-	"\b_user_idB\b\n" +
-	"\x06_titleB\x0e\n" +
-	"\f_descriptionB\f\n" +
+	"\b_user_idB\x0f\n" +
+	"\r_search_queryB\f\n" +
 	"\n" +
 	"_min_priceB\f\n" +
 	"\n" +

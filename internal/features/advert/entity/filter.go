@@ -19,8 +19,7 @@ const (
 
 type Filter struct {
 	UserID      *int64
-	Title       *string `validate:"omitempty,min=1,max=100"`
-	Description *string `validate:"omitempty,min=1,max=1500"`
+	SearchQuery *string `validate:"omitempty,min=1,max=400"`
 	MinPrice    *int64  `validate:"omitempty,gte=0"`
 	MaxPrice    *int64  `validate:"omitempty,gte=0"`
 	CategoryID  *int64  `validate:"omitempty,gte=1"`

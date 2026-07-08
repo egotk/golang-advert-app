@@ -13,8 +13,7 @@ func filterFromRequest(f *advertpb.Filter) advertentity.Filter {
 
 	return advertentity.Filter{
 		UserID:      f.UserId,
-		Title:       f.Title,
-		Description: f.Description,
+		SearchQuery: f.SearchQuery,
 		MinPrice:    f.MinPrice,
 		MaxPrice:    f.MaxPrice,
 		CategoryID:  f.CategoryId,

@@ -1,0 +1,1 @@
+ALTER TABLE advertapp.adverts DROP COLUMN IF EXISTS search_vector;

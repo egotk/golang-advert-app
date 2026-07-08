@@ -60,20 +60,18 @@ func (c *Controller) list(rw http.ResponseWriter, r *http.Request) {
 
 func getListFilterQueryParams(r *http.Request) (advertentity.Filter, error) {
 	const (
-		titleKey       = "title"
-		descriptionKey = "description"
-		minPriceKey    = "minPrice"
-		maxPriceKey    = "maxPrice"
-		categoryIDKey  = "categoryID"
+		searchQueryKey = "search_query"
+		minPriceKey    = "min_price"
+		maxPriceKey    = "max_price"
+		categoryIDKey  = "category_id"
 		statusKey      = "status"
-		fromDateKey    = "fromDate"
-		toDateKey      = "toDate"
+		fromDateKey    = "from_date"
+		toDateKey      = "to_date"
 		sortKey        = "sort"
 		orderKey       = "order"
 	)
 
-	title := corehttprequest.GetStringQueryParam(titleKey, r)
-	description := corehttprequest.GetStringQueryParam(descriptionKey, r)
+	searchQuery := corehttprequest.GetStringQueryParam(searchQueryKey, r)
 
 	minPrice, err := corehttprequest.GetIntQueryParam(minPriceKey, r)
 	if err != nil {
@@ -107,8 +105,7 @@ func getListFilterQueryParams(r *http.Request) (advertentity.Filter, error) {
 	order := corehttprequest.GetStringQueryParam(orderKey, r)
 
 	filter := advertentity.Filter{
-		Title:       title,
-		Description: description,
+		SearchQuery: searchQuery,
 		MinPrice:    minPrice,
 		MaxPrice:    maxPrice,
 		CategoryID:  categoryID,

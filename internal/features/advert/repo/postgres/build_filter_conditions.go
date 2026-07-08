@@ -19,14 +19,9 @@ func buildAdvertFilterConditions(filter advertentity.Filter, tableName *string, 
 		conditions = append(conditions, fmt.Sprintf("%suser_id = $%d", pref, len(args)))
 	}
 
-	if filter.Title != nil {
-		args = append(args, "%"+*filter.Title+"%")
-		conditions = append(conditions, fmt.Sprintf("%stitle ILIKE $%d", pref, len(args)))
-	}
-
-	if filter.Description != nil {
-		args = append(args, "%"+*filter.Description+"%")
-		conditions = append(conditions, fmt.Sprintf("%sdescription ILIKE $%d", pref, len(args)))
+	if filter.SearchQuery != nil {
+		args = append(args, *filter.SearchQuery)
+		conditions = append(conditions, fmt.Sprintf("%ssearch_vector @@ websearch_to_tsquery('russian', $%d)", pref, len(args)))
 	}
 
 	if filter.MinPrice != nil {
