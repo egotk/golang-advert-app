@@ -27,8 +27,7 @@ func (r *Repo) GetUserByEmail(
 		failed_login_count,
 		locked_until,
 		created_at,
-		updated_at,
-		image_path
+		updated_at
 
 	FROM advertapp.users
 	
@@ -50,7 +49,6 @@ func (r *Repo) GetUserByEmail(
 		&user.LockedUntil,
 		&user.CreatedAt,
 		&user.UpdatedAt,
-		&user.ImagePath,
 	)
 	if err != nil {
 		return userentity.User{}, fmt.Errorf("scan: %w", corepostgres.MapError(err))

@@ -22,7 +22,6 @@ func userToResponse(u userentity.User) *userpb.UserResponse {
 		LockedUntil: lockedUntil,
 		CreatedAt:   timestamppb.New(u.CreatedAt),
 		UpdatedAt:   timestamppb.New(u.UpdatedAt),
-		ImagePath:   u.ImagePath,
 	}
 }
 

@@ -26,11 +26,10 @@ func (r *Repo) CreateUser(
 		failed_login_count,
 		locked_until,
 		created_at,
-		updated_at,
-		image_path
+		updated_at
 	)
 	
-	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
 	
 	RETURNING id, version;
 	`
@@ -48,7 +47,6 @@ func (r *Repo) CreateUser(
 		user.LockedUntil,
 		user.CreatedAt,
 		user.UpdatedAt,
-		user.ImagePath,
 	)
 
 	err := row.Scan(

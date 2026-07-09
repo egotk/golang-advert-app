@@ -16,7 +16,6 @@ type dtoResponse struct {
 	LockedUntil *time.Time `json:"locked_until"`
 	CreatedAt   time.Time  `json:"created_at"`
 	UpdatedAt   time.Time  `json:"updated_at"`
-	ImagePath   *string    `json:"image_path"`
 }
 
 func dtoResponseFromEntity(u userentity.User) dtoResponse {
@@ -30,7 +29,6 @@ func dtoResponseFromEntity(u userentity.User) dtoResponse {
 		LockedUntil: u.LockedUntil,
 		CreatedAt:   u.CreatedAt,
 		UpdatedAt:   u.UpdatedAt,
-		ImagePath:   u.ImagePath,
 	}
 }
 

@@ -17,7 +17,7 @@ func (r *Repo) ListUsers(
 	defer cancel()
 
 	query := `
-	SELECT id, version, email, full_name, phone_number, role, locked_until, created_at, updated_at, image_path
+	SELECT id, version, email, full_name, phone_number, role, locked_until, created_at, updated_at
 
 	FROM advertapp.users
 
@@ -46,7 +46,6 @@ func (r *Repo) ListUsers(
 			&user.LockedUntil,
 			&user.CreatedAt,
 			&user.UpdatedAt,
-			&user.ImagePath,
 		)
 		if err != nil {
 			return nil, fmt.Errorf("scan: %w", corepostgres.MapError(err))

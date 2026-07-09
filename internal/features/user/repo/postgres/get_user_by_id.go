@@ -16,7 +16,7 @@ func (r *Repo) GetUserByID(
 	defer cancel()
 
 	query := `
-	SELECT id, version, email, full_name, phone_number, role, locked_until, created_at, updated_at, image_path
+	SELECT id, version, email, full_name, phone_number, role, locked_until, created_at, updated_at
 
 	FROM advertapp.users
 	
@@ -37,7 +37,6 @@ func (r *Repo) GetUserByID(
 		&user.LockedUntil,
 		&user.CreatedAt,
 		&user.UpdatedAt,
-		&user.ImagePath,
 	)
 	if err != nil {
 		return userentity.User{}, fmt.Errorf("scan: %w", corepostgres.MapError(err))

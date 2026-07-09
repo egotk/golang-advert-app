@@ -19,7 +19,6 @@ type User struct {
 	LockedUntil      *time.Time
 	CreatedAt        time.Time
 	UpdatedAt        time.Time
-	ImagePath        *string
 }
 
 func New(
@@ -48,7 +47,6 @@ func New(
 		LockedUntil:      lockedUntil,
 		CreatedAt:        createdAt,
 		UpdatedAt:        updatedAt,
-		ImagePath:        imagePath,
 	}
 }
 

@@ -1,0 +1,1 @@
+ALTER TABLE advertapp.users DROP COLUMN image_path;
