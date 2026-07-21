@@ -13,7 +13,7 @@ type countResponse struct {
 	Count int64 `json:"count"`
 }
 
-func (c *Controller) count(rw http.ResponseWriter, r *http.Request) {
+func (c *Controller) Count(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := corezaplogger.FromContext(ctx)
 	responseHandler := corehttpresponse.New(log, rw)

@@ -13,6 +13,7 @@ type Controller struct {
 	useCase useCase
 }
 
+//go:generate mockgen -source=controller.go -destination=mock_usecase_test.go -package=userhttp_test
 type useCase interface {
 	CreateUser(ctx context.Context, dto userusecase.CreateDTO) (userentity.User, error)
 	ListUsers(ctx context.Context, limit *int64, offset *int64) ([]userentity.User, error)
@@ -36,35 +37,35 @@ func (c *Controller) Routes(jwtService corehttp.JWTService) []corehttp.Route {
 		{
 			Method:  http.MethodPost,
 			Path:    "/users",
-			Handler: c.createUser,
+			Handler: c.CreateUser,
 		},
 		{
 			Method:     http.MethodGet,
 			Path:       "/users",
-			Handler:    c.listUsers,
+			Handler:    c.ListUsers,
 			Middleware: []corehttp.Middleware{jwt},
 		},
 		{
 			Method:     http.MethodGet,
 			Path:       "/users/{id}",
-			Handler:    c.getUserByID,
+			Handler:    c.GetUserByID,
 			Middleware: []corehttp.Middleware{jwt},
 		},
 		{
 			Method:  http.MethodPost,
 			Path:    "/auth/login",
-			Handler: c.login,
+			Handler: c.Login,
 		},
 		{
 			Method:     http.MethodPost,
 			Path:       "/auth/logout",
-			Handler:    c.logout,
+			Handler:    c.Logout,
 			Middleware: []corehttp.Middleware{jwt},
 		},
 		{
 			Method:  http.MethodPost,
 			Path:    "/auth/refresh",
-			Handler: c.refreshTokens,
+			Handler: c.RefreshTokens,
 		},
 	}
 }

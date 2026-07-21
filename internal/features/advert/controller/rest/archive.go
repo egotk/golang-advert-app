@@ -11,7 +11,7 @@ import (
 	advertusecase "github.com/egotk/golang-advert-app/internal/features/advert/usecase"
 )
 
-func (c *Controller) archive(rw http.ResponseWriter, r *http.Request) {
+func (c *Controller) Archive(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := corezaplogger.FromContext(ctx)
 	responseHandler := corehttpresponse.New(log, rw)

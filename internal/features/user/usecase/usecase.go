@@ -13,6 +13,7 @@ type UseCase struct {
 	jwtService jwtService
 }
 
+//go:generate mockgen -source=usecase.go -destination=mock_usecase_test.go -package=userusecase_test
 type repo interface {
 	CreateUser(
 		ctx context.Context,

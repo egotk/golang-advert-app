@@ -10,7 +10,7 @@ import (
 
 type listResponse []dtoResponse
 
-func (c *Controller) listUsers(rw http.ResponseWriter, r *http.Request) {
+func (c *Controller) ListUsers(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := corezaplogger.FromContext(ctx)
 	responseHandler := corehttpresponse.New(log, rw)

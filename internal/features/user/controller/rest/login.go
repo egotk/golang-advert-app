@@ -27,7 +27,7 @@ type loginResponse struct {
 	RefreshToken string `json:"refresh_token"`
 }
 
-func (c *Controller) login(rw http.ResponseWriter, r *http.Request) {
+func (c *Controller) Login(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := corezaplogger.FromContext(ctx)
 	responseHandler := corehttpresponse.New(log, rw)

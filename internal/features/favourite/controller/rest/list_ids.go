@@ -12,7 +12,7 @@ type listIDsResponse struct {
 	FavouriteIDs []int64 `json:"ids"`
 }
 
-func (c *Controller) listIDs(rw http.ResponseWriter, r *http.Request) {
+func (c *Controller) ListIDs(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := corezaplogger.FromContext(ctx)
 	responseHandler := corehttpresponse.New(log, rw)

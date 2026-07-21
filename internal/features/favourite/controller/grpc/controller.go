@@ -12,6 +12,7 @@ type Controller struct {
 	useCase useCase
 }
 
+//go:generate mockgen -source=controller.go -destination=mock_usecase_test.go -package=favgrpc_test
 type useCase interface {
 	Remove(ctx context.Context, dto favusecase.RemoveDTO) error
 	ListIDs(ctx context.Context, userID int64) ([]int64, error)

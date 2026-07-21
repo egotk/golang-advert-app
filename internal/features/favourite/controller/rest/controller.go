@@ -12,6 +12,7 @@ type Controller struct {
 	useCase useCase
 }
 
+//go:generate mockgen -source=controller.go -destination=mock_usecase_test.go -package=favrest_test
 type useCase interface {
 	Remove(ctx context.Context, dto favusecase.RemoveDTO) error
 	ListIDs(ctx context.Context, userID int64) ([]int64, error)
@@ -30,13 +31,13 @@ func (c *Controller) Routes(jwtService corehttp.JWTService) []corehttp.Route {
 		corehttp.NewRoute(
 			http.MethodGet,
 			"/adverts/favourites/ids",
-			c.listIDs,
+			c.ListIDs,
 			jwt,
 		),
 		corehttp.NewRoute(
 			http.MethodDelete,
 			"/adverts/favourites/{id}",
-			c.remove,
+			c.Remove,
 			jwt,
 		),
 	}

@@ -27,7 +27,7 @@ func (r createRequest) toDTO() userusecase.CreateDTO {
 
 type createResponse dtoResponse
 
-func (c *Controller) createUser(rw http.ResponseWriter, r *http.Request) {
+func (c *Controller) CreateUser(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := corezaplogger.FromContext(ctx)
 	responseHandler := corehttpresponse.New(log, rw)

@@ -15,6 +15,7 @@ type Controller struct {
 	useCase useCase
 }
 
+//go:generate mockgen -source=controller.go -destination=mock_usecase_test.go -package=advertrest_test
 type useCase interface {
 	Create(ctx context.Context, dto advertusecase.CreateDTO) (advertentity.Advert, error)
 	GetByID(ctx context.Context, dto advertusecase.GetByIDDTO) (advertentity.Advert, error)
@@ -50,100 +51,100 @@ func (c *Controller) Routes(jwtService corehttp.JWTService) []corehttp.Route {
 		corehttp.NewRoute(
 			http.MethodPost,
 			"/adverts",
-			c.create,
+			c.Create,
 			jwt,
 		),
 		corehttp.NewRoute(
 			http.MethodGet,
 			"/adverts/{id}",
-			c.getByID,
+			c.GetByID,
 			jwt,
 		),
 		corehttp.NewRoute(
 			http.MethodGet,
 			"/adverts",
-			c.list,
+			c.List,
 			jwt,
 		),
 		corehttp.NewRoute(
 			http.MethodGet,
 			"/adverts/my",
-			c.getMyAdverts,
+			c.GetMyAdverts,
 			jwt,
 		),
 		corehttp.NewRoute(
 			http.MethodGet,
 			"/adverts/count",
-			c.count,
+			c.Count,
 			jwt,
 		),
 		corehttp.NewRoute(
 			http.MethodPatch,
 			"/adverts/{id}",
-			c.patch,
+			c.Patch,
 			jwt,
 		),
 		corehttp.NewRoute(
 			http.MethodPost,
 			"/adverts/{id}/approve",
-			c.approve,
+			c.Approve,
 			jwt,
 			corehttp.Role(roles.Admin),
 		),
 		corehttp.NewRoute(
 			http.MethodPost,
 			"/adverts/{id}/reject",
-			c.reject,
+			c.Reject,
 			jwt,
 			corehttp.Role(roles.Admin),
 		),
 		corehttp.NewRoute(
 			http.MethodPost,
 			"/adverts/{id}/archive",
-			c.archive,
+			c.Archive,
 			jwt,
 		),
 		corehttp.NewRoute(
 			http.MethodDelete,
 			"/adverts/{id}",
-			c.delete,
+			c.Delete,
 			jwt,
 		),
 		corehttp.NewRoute(
 			http.MethodPost,
 			"/adverts/images",
-			c.createImages,
+			c.CreateImages,
 			jwt,
 		),
 		corehttp.NewRoute(
 			http.MethodGet,
 			"/adverts/images/{id}",
-			c.getImageByID,
+			c.GetImageByID,
 			jwt,
 		),
 		corehttp.NewRoute(
 			http.MethodDelete,
 			"/adverts/images/{id}",
-			c.deleteImage,
+			c.DeleteImage,
 			jwt,
 		),
 
 		corehttp.NewRoute(
 			http.MethodPost,
 			"/adverts/favourites/{id}",
-			c.addToFavourites,
+			c.AddToFavourites,
 			jwt,
 		),
 		corehttp.NewRoute(
 			http.MethodGet,
 			"/adverts/favourites",
-			c.listFavourites,
+			c.ListFavourites,
 			jwt,
 		),
 		corehttp.NewRoute(
 			http.MethodGet,
 			"/adverts/favourites/count",
-			c.countFavourites,
+			c.CountFavourites,
 			jwt,
 		),
 	}

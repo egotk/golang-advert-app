@@ -21,7 +21,7 @@ func (r createRequest) toDTO() categoryusecase.CreateDTO {
 	}
 }
 
-func (c *Controller) create(rw http.ResponseWriter, r *http.Request) {
+func (c *Controller) Create(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := corezaplogger.FromContext(ctx)
 	responseHandler := corehttpresponse.New(log, rw)

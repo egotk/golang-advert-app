@@ -14,6 +14,7 @@ type Controller struct {
 	useCase useCase
 }
 
+//go:generate mockgen -source=controller.go -destination=mock_usecase_test.go -package=advertgrpc_test
 type useCase interface {
 	Create(ctx context.Context, dto advertusecase.CreateDTO) (advertentity.Advert, error)
 	GetByID(ctx context.Context, dto advertusecase.GetByIDDTO) (advertentity.Advert, error)

@@ -10,7 +10,7 @@ import (
 
 type getByIDResponse dtoResponse
 
-func (c *Controller) getUserByID(rw http.ResponseWriter, r *http.Request) {
+func (c *Controller) GetUserByID(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := corezaplogger.FromContext(ctx)
 	responseHandler := corehttpresponse.New(log, rw)

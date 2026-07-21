@@ -13,6 +13,7 @@ type UseCase struct {
 	storage storage
 }
 
+//go:generate mockgen -source=usecase.go -destination=mock_usecase_test.go -package=advertusecase_test
 type repo interface {
 	Create(ctx context.Context, advert *advertentity.Advert) error
 	GetByID(ctx context.Context, id int64) (advertentity.Advert, error)

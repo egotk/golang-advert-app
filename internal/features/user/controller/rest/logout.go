@@ -21,7 +21,7 @@ func (r logoutRequest) toDTO(userID int64) userusecase.LogoutDTO {
 	}
 }
 
-func (c *Controller) logout(rw http.ResponseWriter, r *http.Request) {
+func (c *Controller) Logout(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := corezaplogger.FromContext(ctx)
 	responseHandler := corehttpresponse.New(log, rw)

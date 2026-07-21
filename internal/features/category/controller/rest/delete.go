@@ -8,7 +8,7 @@ import (
 	corezaplogger "github.com/egotk/golang-advert-app/internal/core/logger/zap"
 )
 
-func (c *Controller) delete(rw http.ResponseWriter, r *http.Request) {
+func (c *Controller) Delete(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := corezaplogger.FromContext(ctx)
 	responseHandler := corehttpresponse.New(log, rw)

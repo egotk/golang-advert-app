@@ -108,7 +108,7 @@ func createRequestFromMultipart(r *http.Request) (createRequest, error) {
 	return request, nil
 }
 
-func (c *Controller) create(rw http.ResponseWriter, r *http.Request) {
+func (c *Controller) Create(rw http.ResponseWriter, r *http.Request) {
 	const contentTypeSeekLen = 512
 
 	ctx := r.Context()

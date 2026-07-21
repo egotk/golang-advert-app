@@ -24,7 +24,7 @@ type refreshTokensResponse struct {
 	RefreshToken string `json:"refresh_token"`
 }
 
-func (c *Controller) refreshTokens(rw http.ResponseWriter, r *http.Request) {
+func (c *Controller) RefreshTokens(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := corezaplogger.FromContext(ctx)
 	responseHandler := corehttpresponse.New(log, rw)

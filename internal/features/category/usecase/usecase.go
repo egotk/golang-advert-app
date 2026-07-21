@@ -10,6 +10,7 @@ type UseCase struct {
 	repo repo
 }
 
+//go:generate mockgen -source=usecase.go -destination=mock_usecase_test.go -package=categoryusecase_test
 type repo interface {
 	Create(
 		ctx context.Context,

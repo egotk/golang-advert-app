@@ -10,7 +10,7 @@ import (
 	favusecase "github.com/egotk/golang-advert-app/internal/features/favourite/usecase"
 )
 
-func (c *Controller) remove(rw http.ResponseWriter, r *http.Request) {
+func (c *Controller) Remove(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := corezaplogger.FromContext(ctx)
 	responseHandler := corehttpresponse.New(log, rw)

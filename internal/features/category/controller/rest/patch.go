@@ -23,7 +23,7 @@ func (r patchRequest) toDTO(id int64) categoryusecase.PatchDTO {
 	}
 }
 
-func (c *Controller) patch(rw http.ResponseWriter, r *http.Request) {
+func (c *Controller) Patch(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := corezaplogger.FromContext(ctx)
 	responseHandler := corehttpresponse.New(log, rw)

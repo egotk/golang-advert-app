@@ -66,7 +66,7 @@ func createImagesRequestFromMultipart(r *http.Request) (createImagesRequest, err
 	return request, nil
 }
 
-func (c *Controller) createImages(rw http.ResponseWriter, r *http.Request) {
+func (c *Controller) CreateImages(rw http.ResponseWriter, r *http.Request) {
 	const contentTypeSeekLen = 512
 
 	ctx := r.Context()

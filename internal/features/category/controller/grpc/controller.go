@@ -13,6 +13,7 @@ type Controller struct {
 	useCase useCase
 }
 
+//go:generate mockgen -source=controller.go -destination=mock_usecase_test.go -package=categorygrpc_test
 type useCase interface {
 	Create(ctx context.Context, dto categoryusecase.CreateDTO) (categoryentity.Category, error)
 	List(ctx context.Context) ([]categoryentity.Category, error)

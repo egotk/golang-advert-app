@@ -11,7 +11,7 @@ import (
 	advertusecase "github.com/egotk/golang-advert-app/internal/features/advert/usecase"
 )
 
-func (c *Controller) addToFavourites(rw http.ResponseWriter, r *http.Request) {
+func (c *Controller) AddToFavourites(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := corezaplogger.FromContext(ctx)
 	responseHandler := corehttpresponse.New(log, rw)
